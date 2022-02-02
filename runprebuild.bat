@@ -1,0 +1,1 @@
+@copy /Y lib\*.* bin\

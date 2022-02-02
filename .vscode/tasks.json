@@ -1,0 +1,36 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "linux": {
+                "command": "./build.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-ExecutionPolicy",
+                    "Unrestricted",
+                    "-NoProfile",
+                    "-File",
+                    "./build.ps1"
+                ], // The ps1 executes, but the system doesn't know where nuget or msbuild are located.
+            },
+            "args": [
+                "/property:GenerateFullPaths=true",
+                "/t:build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
