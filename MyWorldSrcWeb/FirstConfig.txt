@@ -1,0 +1,26 @@
+CONTROL	NAME	PARM1	PARM2	NBR1	NBR2
+ADMINLISTS	Email Addresses	EmailAddr	List of system email addresses in members	0	0
+ADMINLISTS	Grid Default Avatars	GridAvatars	This is the list of default avatars by class and name	0	0
+ADMINLISTS	Grid Region Types	RegionTypes	Region Types List and Prices for Full Economy	0	0
+ADMINLISTS	Grid Settings	Grid	Entries for grid status display	0	0
+ADMINLISTS	Grid System Accounts	GridSysAccounts	List of grid system accounts to identify and prevent disabling them.	0	0
+ADMINSYSTEM	Email Domain Name	EmailDomain	MyWorld.com	0	0
+ADMINSYSTEM	MyData Database Name	MyDataDBName	mydata	0	0
+ADMINSYSTEM	MySite Database Name	MySiteDBName	mysite	0	0
+ADMINSYSTEM	Server Location	ServerLocation	Dev	0	0
+ADMINSYSTEM	SMTP Port	SMTPPort	587	0	0
+ADMINSYSTEM	SMTP Server	SMTPServer	localhost	0	0
+ADMINSYSTEM	Viewer Redirect URL	ViewerURL		0	0
+ECONOMY	Economy Setup	HasEconomy	Economy Management Installed	0	0
+ECONOMY	World Bank Account	WorldBankAcct	World Bank	99	0
+EmailAddr	Grid Owner Email	GridOwner	director@MyWorld.com	0	0
+EmailAddr	Webmaster Email	Webmaster	support@MyWorld.com	0	0
+Grid	Grid Status URL	Status	http://myworldintIP:9500/simstatus/	0	0
+GridAvatars	Human Females	HFAvatars	List of human female avatars	2	0
+GridAvatars	Human Males	HMAvatars	List of human male avatars	1	0
+GridSysAccounts	Grid Library Account	GridLibAcct	Grid Library	0	0
+GridSysAccounts	Grid Manager Account	GridManager		0	6
+GridSysAccounts	Grid Owner Account	GridOwnerAcct	Grid Owner	0	9
+RegionTypes	Full Region		Sort Value = Type number, Numeric value = Region Price	1	0
+RegionTypes	Ocean / Strait		Sort Value = Type number, Numeric value = Region Price	2	0
+RegionTypes	Scenic		Sort Value = Type number, Numeric value = Region Price	3	0

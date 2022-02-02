@@ -1,0 +1,21 @@
+About Us	/AboutUs.aspx	
+Banking	/Banking.aspx	
+BuyThanks	/BuyThanks.aspx	
+ConfirmPartner	/ConfirmPartner.aspx	
+ConfirmReset	/ConfirmReset.aspx	
+Connect	/Connect.aspx	
+Contact Us	/ContactUs.aspx	
+DMCA	/DMCA.aspx	
+FAQ	/FAQ.aspx	
+Gambling	/Gambling.aspx	
+Home	/default.aspx	
+Logon	/Logon.aspx	
+Privacy	/Privacy.aspx	
+Register	/Register.aspx	
+ResetPass	/ResetPass.aspx	
+Standards	/Standards.aspx	
+Team	/Team.aspx	
+TOS	/TOS.aspx	
+TPV	/TPV.aspx	
+Viewer	/Viewer.aspx	
+Viewer Downloads	/ViewerDownloads.aspx	

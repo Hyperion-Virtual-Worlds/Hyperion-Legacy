@@ -1,0 +1,110 @@
+#map-error {
+ position: absolute;
+ background: rgba(0,0,0,0.6);
+ color: #8a1f11;
+ width: 100%;
+ height: 100%;
+ z-index: 9001
+}
+
+#error-content {
+ border: 5px solid #FBC2C4;
+ background: #FBE3E4;
+ width: 500px;
+ margin: 200px auto;
+ z-index: 500;
+ padding: 20px
+}
+
+#error-content .location-title {
+ color: #8a1f11
+}
+
+#error-content a {
+ color: #8a1f11
+}
+
+span.error-close {
+ display: block;
+ float: right;
+ font-weight: bold;
+ margin: 0 0 10px 10px;
+ padding: 10px 25px 10px 10px;
+ line-height: 90%;
+ color: #fff;
+ border: 2px solid #fff;
+ background: #8a1f11 url('/images/icons/error_close.png') no-repeat scroll 95% 50%;
+ cursor: pointer
+}
+   
+.balloon-content {
+ width: 350px;
+ color: gray
+}
+
+.balloon-content-narrow {
+ width: 170px
+}
+
+.balloon-content .buttons {
+ display: inline-block;
+ width: 100%;
+ clear: both
+}
+
+.balloon-content .buttons a {
+ width: 145px
+}
+
+.balloon-content .buttons a.primary {
+ float: left
+}
+
+.balloon-content .buttons a.secondary {
+ float: right
+}
+
+.balloon-content h3 {
+ margin: 0 10px 10px 0;
+ padding: 0;
+ font: bold 14px/110% helvetica,arial,verdana,sans-serif
+}
+
+.balloon-content h4 {
+ margin: 0 10px 5px 0;
+ padding: 0;
+ float: left;
+ clear: left;
+ font: bold 12px/110% helvetica,arial,verdana,sans-serif
+}
+
+.balloon-content img, .balloon-content a:hover img {
+ float: right;
+ clear: both;
+ margin: 0 0 10px 10px;
+ /*border: 1px solid #999;*/
+ max-width: 192px
+}
+
+.balloon-content p {
+ clear: left;
+ margin: 0 0 10px 0
+}
+
+.balloon-content p .highlight {
+ font-weight: bold;
+ background-color: transparent
+}
+
+.balloon-content h4.get-sl {
+ clear: both;
+ margin: 0;
+ font: bold 16px/110% helvetica,arial,verdana,sans-serif;
+ display: block;
+ width: 350px
+}
+
+.location-title {
+ font: bold 16px/110% helvetica,arial,verdana,sans-serif;
+ color: #000
+}

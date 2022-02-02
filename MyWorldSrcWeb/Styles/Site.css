@@ -1,0 +1,177 @@
+/* Site Style sheet template */
+/*             T   R   B   L    */
+body { margin: 0; background-color: #FFFFFF; line-height: normal; color: #000000;
+       font-family: Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; font-weight: normal; font-variant: normal; }
+
+/* Page structural settings */
+/*Div blocks*/
+#HeaderPos { width: 100%; vertical-align: top; background-color: #FFFFFF; margin: 0 0 0 0; padding: 0 0 0 0; border-bottom: solid 1px #FFFFFF; }
+#LSideBar { position: absolute; top: 81px; left: 0; min-height: 600px; width: 200px; vertical-align: top; background-color: #FFFFFF; 
+  /*background-image: url('/Images/Site/Sidebar.jpg'); background-repeat: repeat-y;*/ }
+#BodyArea { margin: 0; padding: 0; padding-left: 200px; vertical-align: top; background-color: #FFFFFF; }
+#BodyAreaFull { margin: 0; padding: 0; vertical-align: top; background-color: #FFFFFF; }
+#FooterPos { width: 100%; vertical-align: top; background-color: #FFFFFF; margin: 0; padding: 0;}
+#__asptrace {  width: 940px; vertical-align: top; background-color: #dddddd;  }
+
+/* Logon page controls*/
+#LogonBox { min-height: 300px; width: 400px; border: solid 1px #000000; border-radius: 5px; margin: 0 0 0 10px; 
+            display: inline-grid; float: left; }
+#InfoBox { min-height: 300px; width: 400px; border: solid 1px #000000; border-radius: 5px; margin: 0 10px 0 0; 
+           display: inline-grid; float: right; padding: 0 0 0 0; }
+.Content { padding: 15px; }
+.SimButton { border: solid 1px #000000; padding: 1px 6px; cursor: default; 
+             -webkit-appearance: push-button; border-width: 2px; font: 400 13.3333px Arial; }
+
+table.HeaderTable { width: 100%; /*background-image: url('/Images/Site/Header.jpg'); background-repeat: no-repeat;*/}
+ td.Header { width: 50%; height: 50px; text-align: center; font-size: 32px; font-weight: bold; }
+ td.HeaderLeft { width: 50%; height: 50px; text-align: right; font-size: 32px; font-weight: bold; }
+ td.HeaderRight { width: 50%; height: 50px; text-align: left; font-size: 32px; font-weight: bold; }
+table.HeaderSpacer {}
+ td.SeparatorLine { height:1px; background-color: #000000; }
+table.SidebarCtl { width: 100%; margin: 0 5px 0 5px; }
+ td.ProgTitle { height: 30px; text-align: center; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 16px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+ td.SidebarSpacer { height: 30px; }
+ #SidebarMenu {}
+table.BodyTable { width: 100%; height: 600px; /*border-left: 2px dotted #aaaaaa;*/ }
+ td.BodyBg { background-color: #ffffff; vertical-align: top; padding: 0px 1px 0px 1px; } /*trbl*/
+table.FooterTable { width: 100%; height: 100%; }
+ td.FooterSeparator { border-top: solid 1px #999999; }
+ td.FooterDivider { height: 1px; background-color: #FFFFFF; }
+ td.FooterCopyright { /*background-image: url('/Images/Site/FooterBg.jpg');*/ }
+ td.CopyrightL { height: 60px; width: 50%; text-align: left; padding-left: 12px; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 9px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #777777; }
+ td.CopyrightR { height: 60px; width: 50%; text-align: right; padding-right: 12px; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 9px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #777777; }
+/* Verified to here */
+
+td.PageTitle { height: 30px; /*background-color: #DDDDDD;*/ font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 14px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; border-bottom: 2px solid #000000; color: #000000; }
+td.ReportTitle { height: 30px; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 20px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; text-align: center; color: #000000; }
+
+td.PageDivider { height: 5px; background-color: #FFFFFF; }
+td.SecTitle { height: 20px; background-color: #FFFFFF; text-align: center; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+td.FldTitleCol { width: 30%; height: 25px; background-color: #EEEEEE; text-align: right; padding: 0 2px 1px 0; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+td.FldEntryCol { width: 70%; height: 25px; background-color: #FFFFFF; padding: 0 2px 1px 0; }
+td.TitleCol { height: 20px; background-color: #eeeeee; text-align: right; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+td.EntryCol { height: 20px; }
+td.MergeCol { height: 20px; background-color: #eeeeee; text-align: center; }
+td.Welcome { height: 28px; text-align: right; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+td.TopicTitle { font-size: 14px; font-weight: bold; color: #000000; }
+td.TopicContent { font-size: 12px; font-weight: normal; color: #000000; }
+.UserName { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #9d0691; }
+.Title { height: 28px; padding-left: 3px; background-color: #EEEEEE; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+.SubTitle { height: 28px; padding-left: 3px; text-align: left; background-color: #CCCCCC; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+.AltLine {background-color: #F8F8F8; }
+.Button { background-color: #8e7b6c; padding: 0px 15px 0px 15px; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-weight: bold; color: #ffffff; }
+.SmallTitle { text-align: center; text-decoration: underline; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-weight: bold; color: #000000; }
+.NoShow { display: none;}
+.EditCtrl {text-align: right; color: #0000ee; cursor: pointer;}
+.EditBorder { border: 1px solid #000000;}
+p.Paragraphs { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+
+/* DreamCastle Account Avatar Animations */
+/* http://www.w3schools.com/css/css3_animations.asp */
+.avatar{width:200px; height:200px; display: inline-grid; margin:0 auto; padding:0; background-position: 0px 100%; border-radius: 10px; border-right: 3px solid #36495A; border-bottom: 3px solid #36495A; box-shadow: inset 0 0 10px #AAAAAA;}
+
+/* Delete window specific settings */
+#DelWin { width: 500px; vertical-align: top; background-color: #ffffff; }
+#DelWinBG { width: 100%; height: 100%; background-color: #999999; -moz-opacity:0.5; opacity: 0.5; filter: alpha(opacity=50); }
+table.WarnTable { width: 100%; background-color: #ffff00; border: solid 2px #dddddd;}
+td.WarnTitle { height: 50px; text-align: center; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 50px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #ff0033;}
+td.WarnText { height: 30px; text-align: center; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+td.WarnMsg { height: 30px; text-align: center; vertical-align: top; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000; }
+
+/* Picture display window specific settings */
+div.DivWinTrans { position: fixed; left: 0; right: 0; bottom: 0; top: 0; display: none; background-color: #999999; -moz-opacity:0.6; opacity:0.6; filter: alpha(opacity=60); }
+div.DivWinBox { position: fixed; left: 0; right: 0; bottom: 0; top: 0; width: 100%; height: 100%; display: none; text-align: center; vertical-align: middle; }
+table.PicTable { width: 500px; background-color: #ffffff; border: solid 2px #000000; padding: 3px; border-radius: 10px; }
+
+/* Popup page specific settings */
+/* Width settings are unique to the individual pages. Dimensions based on created window size. */
+body.PopBody { margin: 5px 5px 5px 5px; border: solid 1px #A0A0A0; background-color: #FFFFFF; }
+#PopHeaderPos { width: 100%; height: 25px; vertical-align: top; background-color: #FFFFFF; border-bottom: solid 1px #000000; }
+#PopBodyArea { width: 100%; vertical-align: top; background-color: #FFFFFF; }
+#PopFooterPos { width: 100%; vertical-align: top; background-color: #FFFFFF; }
+table.PopHeader { width: 100%; height: 100%; }
+ td.PopTitle { height: 25px; font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 11px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; }
+table.PopTable { width: 100%; height: 100%; }
+ td.PopBodyBg { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 11px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000; }
+ 
+@media print { /* Settings here overide anything set above to control printing formatting.*/
+ body { font-family: Times New Roman, serif; font-size: 10px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000; }
+ /* table.ControlTable { width: 100%; background-color: #9eaac0; border: none; padding: 5px 5px 5px 5px; } (not used in GLC) */
+ #HeaderPos { display: none; }
+ #LSideBar { position: absolute; top: 0px; left: 0px; width: 0px; display: none; }
+ #ReportBody { width: 100%; height: 100%; background-color: #ffffff; }
+ #BodyArea { padding-left: 0px; width: 100%; background-color: #ffffff; }
+ .NoPrint { display: none; } 
+ td.BodyBg { width: 100%; }
+ tr.PrintHeader td { display: block; }
+ .PageBreakBefore { page-break-before: always; }
+ .PageBreakAfter { page-break-after: always; }
+ td.FooterBg { display: none; }
+ /* Student Address print display  */
+ #PrintContent { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 12pt; font-style: normal; border: none; padding: 10px 0 10px 0; margin: 0 0 0 0; }
+ /* Form Letter Specific display  */
+ table.LetterSize {width: 95%; background-color: #ffffff; }
+ #LetterSpace { border: none;}
+ }
+@media screen { /* Settings here are in addition to anything set above for display page elements.*/
+ .NoPrint {} 
+ #ReportBody { width: 100%; height: 100%; }
+ tr.PrintHeader td { display: none;}
+ .PageBreakBefore { }
+ .PageBreakAfter { }
+ /* Student Address print display  */
+ #PrintContent { }
+ /* Form Letter Specific display  */
+ table.LetterSize {width: 100%; background-color: #ffffff}
+ }
+
+/* General style settings */
+
+form { display: inline;} /* Prevents forms from showing blank space around them.*/
+b, 
+p,
+i,
+li {font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; }
+
+/* table cellpadding,cellspacing equivelent: */
+table {border-spacing: 0; border-collapse: collapse;}
+td {padding: 0 0 0 0;}
+
+a:link { color: #0000CC; text-decoration: none; font-weight: normal; font-size: 12px; }
+a:visited { color: #0000CC; text-decoration: none; font-weight: normal; font-size: 12px; }
+a:hover { color: #0000AA; text-decoration: none; font-weight: normal; font-size: 12px; }
+
+a.NavMenu:link { color: #000000; text-decoration: none; font-weight: bold; font-size: 11px; }
+a.NavMenu:visited { color: #000000; text-decoration: none; font-weight: bold; font-size: 11px; }
+a.NavMenu:hover { color: #000000; text-decoration: none; font-weight: bold; font-size: 11px; }
+
+a.MenuLink:link { color: #000000; text-decoration: none; font-weight: normal; font-size: 12px; }
+a.MenuLink:visited { color: #000000; text-decoration: none; font-weight: normal; font-size: 12px; }
+a.MenuLink:hover { color: #000000; text-decoration: none; font-weight: normal; font-size: 12px; }
+
+a.TOC { color: #000000; text-decoration: none; font-weight: bold; font-size: 14px; }
+a.TOCRtn { color: #AAAAAA; text-decoration: none; font-weight: bold; font-size: 14px; }
+
+a.Footer {font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 9px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #333333; }
+
+p.Justify { text-align: justify; }
+
+/* Simulated Link styles */
+.NavLink { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000; cursor: pointer; }
+.NOverLink { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #888888; cursor: pointer; }
+
+.Errors { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #FF0033}
+
+/* Standard Text Settings */
+.Text1 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 9px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text2 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 10px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text3 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 11px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text4 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text5 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 14px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text6 { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 18px; font-style: normal; line-height: normal; font-weight: normal; font-variant: normal; color: #000000 }
+.Text1Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 9px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }
+.Text2Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 10px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }
+.Text3Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 11px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }
+.Text4Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 12px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }
+.Text5Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 14px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }
+.Text6Bold { font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 18px; font-style: normal; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 }

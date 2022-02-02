@@ -1,0 +1,44 @@
+/* Top Navigation menu settings */
+table.TopControl {position: relative; height: 30px; width: 100%; border-top: solid 1px #000000; border-bottom: solid 1px #000000; }
+ td.TopNavbar { height: 24px; /*background-color: #FFFFFF;*/}
+table.TopContainer {width: 100%; /*background-color: #FFFFFF;*/}
+ td.TopMenuBar {width: 100%; text-align: center;}
+table.TopTable { width: 100%; }
+ td.TopEntry {
+  width: 90px; height: 20px; /*background-color: #FFFFFF;*/ text-align: center; padding-left: 0px; line-height: normal; cursor: pointer;
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+table.TopSubTable { background-color: #dddddd; border: solid 1px #000000;}
+ td.TopSubEntry {
+  width: 90px; height: 20px; /*background-color: #FFFFFF;*/ text-align: left; padding-left: 5px; line-height: normal; cursor: pointer;
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000;
+ }
+td.TopNavSep { width: 1px; height: 24px; background-color: #eeeeee; }
+td.TopNavTitle { height: 24px; background-color: #FFFFFF; line-height: normal; 
+  font-family: Verdana, Arial, Helvetica, Geneva, sans-serif; font-size: 10px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+div.TopListOn { display: block; visibility: visible; }
+div.TopListOff { display: none; visibility: hidden; }
+div.TopSubmenu { position: absolute; left: 0px; top: 0px; z-index: 100; }
+
+A.TopALink:link { line-height: normal; 
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000;
+ }
+A.TopALink:visited { line-height: normal; 
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+A.TopALink:hover { text-decoration: underline; line-height: normal; 
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+.TopMenuItem { line-height: normal;
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+.TopLink { line-height: normal; cursor: pointer;
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+}
+.TopLinkOver { text-decoration: underline; line-height: normal; cursor: pointer;
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #000000; 
+ }
+.TopError { height: 20px; background-color: #FFFFFF; line-height: normal; 
+  font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; font-weight: bold; font-variant: normal; color: #FF0033; 
+ }

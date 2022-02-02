@@ -1,0 +1,9 @@
+/* TreeView Menu Style settings */
+table.TreeViewTable {} /* Allows background and border settings. Width and center are Object controls.*/
+td.TreeVTitle    { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; text-align: left; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 ; text-decoration: none;}
+td.TreeVIcon     { width: 15px; height: 15px; }
+td.TreeVSubTitle { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 11px; font-style: normal; text-align: left; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 ; text-decoration: none;}
+td.TreeVEntry    { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 10px; font-style: normal; text-align: left; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 ; text-decoration: none; cursor: pointer;}
+.TreeVItem       { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 10px; font-style: normal; text-align: left; line-height: normal; font-weight: bold; font-variant: normal; color: #000000 ; text-decoration: none; cursor: pointer;}
+.TreeVLink       { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 10px; font-style: normal; text-align: left; line-height: normal; font-weight: bold; font-variant: normal; color: #0000FF ; text-decoration: none; cursor: pointer;}
+td.TreeVError    { font-family: Verdana, Geneva, Arial, sans-serif; font-size: 10px; font-style: normal; text-align: left; line-height: normal; font-weight: normal; font-variant: normal; color: #FF0000 ; text-decoration: none;}
