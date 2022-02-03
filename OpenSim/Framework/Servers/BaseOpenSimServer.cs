@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSim Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -29,9 +26,9 @@
  */
 
 using System;
+using System.Net;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -41,26 +38,27 @@ using log4net;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Repository;
-using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using OpenSim.Framework.Console;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework.Statistics;
-using Timer = System.Timers.Timer;
+using Timer=System.Timers.Timer;
+
+using OpenMetaverse;
+using OpenMetaverse.StructuredData;
+
 
 namespace OpenSim.Framework.Servers
 {
     /// <summary>
-    /// Common base for the main Servers (user, grid, inventory, region, etc)
+    /// Common base for the main OpenSimServers (user, grid, inventory, region, etc)
     /// </summary>
     public abstract class BaseOpenSimServer
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// This will control a periodic log printout
-        /// of the current 'show stats' (if they are active) for this
+        /// This will control a periodic log printout of the current 'show stats' (if they are active) for this
         /// server.
         /// </summary>
         private Timer m_periodicDiagnosticsTimer = new Timer(60 * 60 * 1000);
@@ -87,15 +85,14 @@ namespace OpenSim.Framework.Servers
         protected string m_osSecret = String.Empty;
 
         protected BaseHttpServer m_httpServer;
-
         public BaseHttpServer HttpServer
         {
             get { return m_httpServer; }
         }
 
+      
         /// <summary>
-        /// Holds the non-viewer statistics
-        /// collection object for this service/server
+        /// Holds the non-viewer statistics collection object for this service/server
         /// </summary>
         protected IStatsCollector m_stats;
 
@@ -135,8 +132,7 @@ namespace OpenSim.Framework.Servers
         }
         
         /// <summary>
-        /// Must be overriden by child classes for
-        /// their own server specific startup behaviour.
+        /// Must be overriden by child classes for their own server specific startup behaviour.
         /// </summary>
         protected virtual void StartupSpecific()
         {
@@ -161,13 +157,11 @@ namespace OpenSim.Framework.Servers
                 else
                 {
                     m_consoleAppender.Console = m_console;
-
+                    
                     // If there is no threshold set then the threshold is effectively everything.
                     if (null == m_consoleAppender.Threshold)
-                    {
                         m_consoleAppender.Threshold = Level.All;
-                    }
-
+                    
                     Notice(String.Format("Console log level is {0}", m_consoleAppender.Threshold));
                 }                                          
                 
@@ -210,20 +204,17 @@ namespace OpenSim.Framework.Servers
         }
         
         /// <summary>
-        /// Should be overriden and referenced
-        /// by descendents if they need to perform
-        /// extra shutdown processing
-        /// </summary>
+        /// Should be overriden and referenced by descendents if they need to perform extra shutdown processing
+        /// </summary>      
         public virtual void ShutdownSpecific() {}
         
         /// <summary>
-        /// Provides a list of help topics that are available.
-        /// Overriding classes should append their topics to the
+        /// Provides a list of help topics that are available.  Overriding classes should append their topics to the
         /// information returned when the base method is called.
         /// </summary>
+        /// 
         /// <returns>
-        /// A list of strings that represent different help
-        /// topics on which more information is available
+        /// A list of strings that represent different help topics on which more information is available
         /// </returns>
         protected virtual List<string> GetHelpTopics() { return new List<string>(); }
 
@@ -254,7 +245,6 @@ namespace OpenSim.Framework.Servers
             StringBuilder sb = new StringBuilder();
 
             List<Thread> threads = ThreadTracker.GetThreads();
-
             if (threads == null)
             {
                 sb.Append("Thread tracking is only enabled in DEBUG mode.");
@@ -262,7 +252,6 @@ namespace OpenSim.Framework.Servers
             else
             {
                 sb.Append(threads.Count + " threads are being tracked:" + Environment.NewLine);
-
                 foreach (Thread t in threads)
                 {
                     if (t.IsAlive)
@@ -302,8 +291,7 @@ namespace OpenSim.Framework.Servers
         }
 
         /// <summary>
-        /// Performs initialization of the scene,
-        /// such as loading configuration from disk.
+        /// Performs initialization of the scene, such as loading configuration from disk.
         /// </summary>
         public virtual void Startup()
         {
@@ -319,9 +307,7 @@ namespace OpenSim.Framework.Servers
         }
 
         /// <summary>
-        /// Should be overriden and referenced by
-        /// descendents if they need to perform
-        /// extra shutdown processing
+        /// Should be overriden and referenced by descendents if they need to perform extra shutdown processing
         /// </summary>      
         public virtual void Shutdown()
         {
@@ -358,7 +344,6 @@ namespace OpenSim.Framework.Servers
             {
                 // Any argument implies forced GC.
                 mode = GCCollectionMode.Forced;
-
                 switch (args[1].ToLower())
                 {
                     case "now":
@@ -386,23 +371,19 @@ namespace OpenSim.Framework.Servers
                 Notice("No appender named Console found (see the log4net config file for this executable)!");
                 return;
             }
-
+      
             string rawLevel = cmd[3];
-
+            
             ILoggerRepository repository = LogManager.GetRepository();
             Level consoleLevel = repository.LevelMap[rawLevel];
-
+            
             if (consoleLevel != null)
-            {
                 m_consoleAppender.Threshold = consoleLevel;
-            }
             else
-            {
                 Notice(
                     String.Format(
                         "{0} is not a valid logging level.  Valid logging levels are ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF",
                         rawLevel));
-            }
 
             Notice(String.Format("Console log level is {0}", m_consoleAppender.Threshold));
         }
@@ -421,9 +402,7 @@ namespace OpenSim.Framework.Servers
                 Notice("show info - show server information (e.g. startup path).");
 
                 if (m_stats != null)
-                {
                     Notice("show stats - show statistical information for this server");
-                }
 
                 Notice("show threads - list tracked threads");
                 Notice("show uptime - show server startup time and uptime.");
@@ -451,9 +430,7 @@ namespace OpenSim.Framework.Servers
 
                 case "stats":
                     if (m_stats != null)
-                    {
                         Notice(m_stats.Report());
-                    }
                     break;
 
                 case "threads":
@@ -465,7 +442,9 @@ namespace OpenSim.Framework.Servers
                     break;
 
                 case "version":
-                    Notice(String.Format("Version: {0}", VersionInfo.Version));
+                    Notice(
+                        String.Format(
+                            "Version: {0}", VersionInfo.Version));
                     break;
             }
         }
@@ -477,27 +456,21 @@ namespace OpenSim.Framework.Servers
         public virtual void HandleBlacklistOwner(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistCreator(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistName(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistUser(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistRemove(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistClear(string module, string[] cmd)
         {
         }
-
         public virtual void HandleBlacklistShow(string module, string[] cmd)
         {
         }
@@ -532,16 +505,16 @@ namespace OpenSim.Framework.Servers
             }
         }
         
-        public string osSecret
-        {
+        public string osSecret {
             // Secret uuid for the simulator
             get { return m_osSecret; }
+            
         }
 
         public string StatReport(OSHttpRequest httpRequest)
         {
             // If we catch a request for "callback", wrap the response in the value for jsonp
-            if (httpRequest.QueryString["callback"] != null)
+            if( httpRequest.QueryString["callback"] != null)
             {
                 return httpRequest.QueryString["callback"] + "(" + m_stats.XReport((DateTime.Now - m_startuptime).ToString() , VersionInfo.FullVersion ) + ");";
             } 

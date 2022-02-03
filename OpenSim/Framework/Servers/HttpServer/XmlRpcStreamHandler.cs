@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -30,13 +27,13 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using System.Xml;
+using System.Reflection;
 using log4net;
 using Nwc.XmlRpc;
+using System.IO.Compression;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
@@ -60,7 +57,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         public override byte[] Handle(string path, Stream request, OSHttpRequest httpRequest, OSHttpResponse httpResponse)
         {
             XmlRpcRequest xmlRpcRequest = null;
-            XmlRpcResponse xmlRpcResponse = null;
+             XmlRpcResponse xmlRpcResponse = null;
             string requestBody = null;
             byte[] response;
 
@@ -159,5 +156,6 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             return (xff);
         }
+
     }
 }

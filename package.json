@@ -1,16 +1,16 @@
 {
-    "name": "halcyon",
-    "description": "Halcyon 3D virtual world simulator.",
+    "name": "Hyperion Legacy",
+    "description": "Hyperion Legacy 3D virtual world simulator.",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/HalcyonGrid/halcyon.git"
+        "url": "https://github.com/Hyperion-Virtual-Worlds/Hyperion-Legacy.git"
     },
     "license": "BSD-3-Clause",
     "bugs": {
-        "url": "https://github.com/HalcyonGrid/halcyon/issues"
+        "url": "https://github.com/Hyperion-Virtual-Worlds/Hyperion-Legacy/issues"
     },
-    "homepage": "https://github.com/HalcyonGrid/halcyon#readme",
+    "homepage": "https://github.com/Hyperion-Virtual-Worlds/Hyperion-Legacy#readme",
     "scripts": {
         "build:scripts": "tsc --project .scripts/tsconfig.json",
         "build:workflow-scripts": "tsc --project .github/scripts/tsconfig.json",

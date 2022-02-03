@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -30,8 +27,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
+using System.Net;
 using System.Text;
 using log4net;
 using OpenSim.Framework.Servers.HttpServer;
@@ -40,6 +37,7 @@ namespace OpenSim.Framework.Servers
 {
     public class MainServer
     {
+        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static BaseHttpServer instance = null;
         private static Dictionary<uint, BaseHttpServer> m_Servers = new Dictionary<uint, BaseHttpServer>();
 
@@ -62,12 +60,8 @@ namespace OpenSim.Framework.Servers
                 s_debugLevel = value;
 
                 lock (m_Servers)
-                {
                     foreach (BaseHttpServer server in m_Servers.Values)
-                    {
                         server.DebugLevel = s_debugLevel;
-                    }
-                }
             }
         }
 
@@ -77,8 +71,7 @@ namespace OpenSim.Framework.Servers
         /// Set the main HTTP server instance.
         /// </summary>
         /// <remarks>
-        /// This will be used to register all
-        /// handlers that listen to the default port.
+        /// This will be used to register all handlers that listen to the default port.
         /// </remarks>
         /// <exception cref='Exception'>
         /// Thrown if the HTTP server has not already been registered via AddHttpServer()
@@ -92,10 +85,7 @@ namespace OpenSim.Framework.Servers
                 lock (m_Servers)
                 {
                     if (!m_Servers.ContainsValue(value))
-                    {
                         throw new Exception("HTTP server must already have been registered to be set as the main instance");
-                    }
-
                     instance = value;
                 }
             }
@@ -105,8 +95,7 @@ namespace OpenSim.Framework.Servers
         /// Get all the registered servers.
         /// </summary>
         /// <remarks>
-        /// Returns a copy of the dictionary
-        /// so this can be iterated through without locking.
+        /// Returns a copy of the dictionary so this can be iterated through without locking.
         /// </remarks>
         /// <value></value>
         public static Dictionary<uint, BaseHttpServer> Servers
@@ -193,32 +182,24 @@ namespace OpenSim.Framework.Servers
                         httpServer.Secure ? "S" : String.Empty, httpServer.ListenIPAddress, httpServer.Port);
         
                     handlers.AppendFormat("* XMLRPC:\n");
-
                     foreach (String s in httpServer.GetXmlRpcHandlerKeys())
-                    {
                         handlers.AppendFormat("\t{0}\n", s);
-                    }
-
+        
                     handlers.AppendFormat("* HTTP:\n");
-
                     foreach (String s in httpServer.GetHTTPHandlerKeys())
-                    {
                         handlers.AppendFormat("\t{0}\n", s);
-                    }
-
+        
+//                    handlers.AppendFormat("* Agent:\n");
+//                    foreach (String s in httpServer.GetAgentHandlerKeys())
+//                        handlers.AppendFormat("\t{0}\n", s);
+        
                     handlers.AppendFormat("* LLSD:\n");
-
                     foreach (String s in httpServer.GetLLSDHandlerKeys())
-                    {
                         handlers.AppendFormat("\t{0}\n", s);
-                    }
-
+        
                     handlers.AppendFormat("* StreamHandlers ({0}):\n", httpServer.GetStreamHandlerKeys().Count);
-
                     foreach (String s in httpServer.GetStreamHandlerKeys())
-                    {
                         handlers.AppendFormat("\t{0}\n", s);
-                    }
 
                     handlers.Append("\n");
                 }
@@ -228,8 +209,7 @@ namespace OpenSim.Framework.Servers
         }
 
         /// <summary>
-        /// Register an already started HTTP
-        /// server to the collection of known servers.
+        /// Register an already started HTTP server to the collection of known servers.
         /// </summary>
         /// <param name='server'></param>
         public static void AddHttpServer(BaseHttpServer server)
@@ -237,14 +217,10 @@ namespace OpenSim.Framework.Servers
             lock (m_Servers)
             {
                 if (m_Servers.ContainsKey(server.Port))
-                {
                     throw new Exception(string.Format("HTTP server for port {0} already exists.", server.Port));
-                }
-
+                
                 if (instance == null)
-                {
                     instance = server;
-                }
 
                 m_Servers.Add(server.Port, server);
             }
@@ -261,40 +237,28 @@ namespace OpenSim.Framework.Servers
         public static bool RemoveHttpServer(uint port)
         {
             lock (m_Servers)
-            {
                 return m_Servers.Remove(port);
-            }
         }
 
         /// <summary>
-        /// Does this collection of servers
-        /// contain one with the given port?
+        /// Does this collection of servers contain one with the given port?
         /// </summary>
         /// <remarks>
-        /// Unlike GetHttpServer, this will not
-        /// instantiate a server if one does not
-        /// exist on that port.
+        /// Unlike GetHttpServer, this will not instantiate a server if one does not exist on that port.
         /// </remarks>
         /// <param name='port'></param>
-        /// <returns>
-        /// true if a server with the given port
-        /// is registered, false otherwise.
-        /// </returns>
+        /// <returns>true if a server with the given port is registered, false otherwise.</returns>
         public static bool ContainsHttpServer(uint port)
         {
             lock (m_Servers)
-            {
                 return m_Servers.ContainsKey(port);
-            }
         }
 
         /// <summary>
-        /// Get the default http server or an
-        /// http server for a specific port.
+        /// Get the default http server or an http server for a specific port.
         /// </summary>
         /// <remarks>
-        /// If the requested HTTP server doesn't
-        /// already exist then a new one is instantiated and started.
+        /// If the requested HTTP server doesn't already exist then a new one is instantiated and started.
         /// </remarks>
         /// <returns></returns>
         /// <param name='port'>If 0 then the default HTTP server is returned.</param>
@@ -308,8 +272,7 @@ namespace OpenSim.Framework.Servers
         /// and/or an http server bound to a specific address
         /// </summary>
         /// <remarks>
-        /// If the requested HTTP server doesn't already
-        /// exist then a new one is instantiated and started.
+        /// If the requested HTTP server doesn't already exist then a new one is instantiated and started.
         /// </remarks>
         /// <returns></returns>
         /// <param name='port'>If 0 then the default HTTP server is returned.</param>
@@ -317,21 +280,15 @@ namespace OpenSim.Framework.Servers
         public static IHttpServer GetHttpServer(uint port, IPAddress ipaddr)
         {
             if (port == 0)
-            {
                 return Instance;
-            }
-
+            
             if (instance != null && port == Instance.Port)
-            {
                 return Instance;
-            }
 
             lock (m_Servers)
             {
                 if (m_Servers.ContainsKey(port))
-                {
                     return m_Servers[port];
-                }
 
                 m_Servers[port] = new BaseHttpServer(port, ipaddr);
                 m_Servers[port].Start();

@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -101,31 +98,23 @@ namespace OpenSim.Framework.Servers.HttpServer
             requestStream.Close();
 
             TResponse deserial = default(TResponse);
-
             using (WebResponse resp = request.GetResponse())
             {
                 XmlSerializer deserializer = new XmlSerializer(typeof(TResponse));
                 Stream respStream = null;
-
                 try
                 {
                     respStream = resp.GetResponseStream();
                     deserial = (TResponse)deserializer.Deserialize(respStream);
                 }
-                catch
-                {
-                }
+                catch { }
                 finally
                 {
                     if (respStream != null)
-                    {
                         respStream.Close();
-                    }
-
                     resp.Close();
                 }
             }
-
             return deserial;
         }
     }
@@ -164,7 +153,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                 serializer.Serialize(writer, sobj);
                 writer.Flush();
             }
-
             buffer.Close();
 
             int length = (int)buffer.Length;
@@ -173,25 +161,26 @@ namespace OpenSim.Framework.Servers.HttpServer
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(buffer.ToArray(), 0, length);
             requestStream.Close();
+            // IAsyncResult result = request.BeginGetResponse(AsyncCallback, request);
             request.BeginGetResponse(AsyncCallback, request);
         }
 
         private void AsyncCallback(IAsyncResult result)
         {
             WebRequest request = (WebRequest)result.AsyncState;
-
             using (WebResponse resp = request.EndGetResponse(result))
             {
                 TResponse deserial;
                 XmlSerializer deserializer = new XmlSerializer(typeof(TResponse));
                 Stream stream = resp.GetResponseStream();
 
-                deserial = (TResponse)deserializer.Deserialize(stream);
+                // This is currently a bad debug stanza since it gobbles us the response...
+                //                StreamReader reader = new StreamReader(stream);
+                //                m_log.DebugFormat("[REST OBJECT POSTER RESPONSE]: Received {0}", reader.ReadToEnd());
 
+                deserial = (TResponse)deserializer.Deserialize(stream);
                 if (stream != null)
-                {
                     stream.Close();
-                }
 
                 if (deserial != null && ResponseCallback != null)
                 {
@@ -212,7 +201,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         private RestDeserializeMethod<TRequest, TResponse> m_method;
         private CheckIdentityMethod m_smethod;
 
-        public RestDeserializeSecureHandler(string httpMethod, string path,
+        public RestDeserializeSecureHandler(
+             string httpMethod, string path,
              RestDeserializeMethod<TRequest, TResponse> method, CheckIdentityMethod smethod)
             : base(httpMethod, path)
         {
@@ -221,7 +211,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         }
 
         public void Handle(string path, Stream request, Stream responseStream,
-            OSHttpRequest httpRequest, OSHttpResponse httpResponse)
+                           OSHttpRequest httpRequest, OSHttpResponse httpResponse)
         {
             RestSessionObject<TRequest> deserial = default(RestSessionObject<TRequest>);
             bool fail = false;
@@ -241,7 +231,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             TResponse response = default(TResponse);
-
             if (!fail && m_smethod(deserial.SessionID, deserial.AvatarID))
             {
                 response = m_method(deserial.Body);
@@ -281,7 +270,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         }
 
         public void Handle(string path, Stream request, Stream responseStream,
-            OSHttpRequest httpRequest, OSHttpResponse httpResponse)
+                           OSHttpRequest httpRequest, OSHttpResponse httpResponse)
         {
             TRequest deserial = default(TRequest);
             bool fail = false;
@@ -301,7 +290,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             TResponse response = default(TResponse);
-
             if (!fail && m_tmethod(httpRequest.RemoteIPEndPoint))
             {
                 response = m_method(deserial);
@@ -314,4 +302,5 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
         }
     }
+
 }

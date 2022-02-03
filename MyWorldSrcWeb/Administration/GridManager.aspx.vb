@@ -755,7 +755,7 @@ Partial Class Administration_GridManager
 
   '' Process creation in targeted Machine:
   'Dim MyProcess As New System.Diagnostics.Process()
-  'Dim IPByName As System.Diagnostics.Process() = System.Diagnostics.Process.GetProcessesByName("Halcyon.exe", StartUp("internalIP"))
+  'Dim IPByName As System.Diagnostics.Process() = System.Diagnostics.Process.GetProcessesByName("Hyperion.exe", StartUp("internalIP"))
   ''MyProcess.StartInfo = IPByName(0).StartInfo
   'If IPByName.Length = 0 Then                               ' Process does not exist, OK to create
   ' MyProcess = IPByName(0)

@@ -268,7 +268,7 @@ namespace OpenSim.Framework.Console
 
                 if (m_sigUtil == null)
                 {
-                    m_log.Warn("[REMOTECONSOLE] StartSession JWT Authorization subsystem not initialized. Does your Hyperion.ini contain a SSLCertFile stanza in the [Network] section?");
+                    m_log.Warn("[REMOTECONSOLE] StartSession JWT Authorization subsystem not initialized. Does your Halcyon.ini contain a SSLCertFile stanza in the [Network] section?");
                     return reply;
                 }
 
@@ -378,7 +378,7 @@ namespace OpenSim.Framework.Console
 
                 if (m_sigUtil == null)
                 {
-                    m_log.Warn("[REMOTECONSOLE] CloseSession JWT Authorization subsystem not initialized. Does your Hyperion.ini contain a SSLCertFile stanza in the [Network] section?");
+                    m_log.Warn("[REMOTECONSOLE] CloseSession JWT Authorization subsystem not initialized. Does your Halcyon.ini contain a SSLCertFile stanza in the [Network] section?");
                     return reply;
                 }
 
@@ -477,7 +477,7 @@ namespace OpenSim.Framework.Console
 
                 if (m_sigUtil == null)
                 {
-                    m_log.Warn("[REMOTECONSOLE] SessionCommand JWT Authorization subsystem not initialized. Does your Hyperion.ini contain a SSLCertFile stanza in the [Network] section?");
+                    m_log.Warn("[REMOTECONSOLE] SessionCommand JWT Authorization subsystem not initialized. Does your Halcyon.ini contain a SSLCertFile stanza in the [Network] section?");
                     return reply;
                 }
 
@@ -607,7 +607,7 @@ namespace OpenSim.Framework.Console
 
                 if (m_sigUtil == null)
                 {
-                    m_log.Warn("[REMOTECONSOLE] ReadResponses JWT Authorization subsystem not initialized. Does your Hyperion.ini contain a SSLCertFile stanza in the [Network] section?");
+                    m_log.Warn("[REMOTECONSOLE] ReadResponses JWT Authorization subsystem not initialized. Does your Halcyon.ini contain a SSLCertFile stanza in the [Network] section?");
                     return;
                 }
 

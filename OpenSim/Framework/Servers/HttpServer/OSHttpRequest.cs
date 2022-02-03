@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -37,17 +34,19 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Web;
+//using HttpServer;
 using log4net;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
     public class OSHttpRequest
     {
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public HttpListenerRequest Request { get; set; }
 
         /// <summary>
-        /// Used when logging packet messages.
-        /// A sequence number to identify the request.
+        /// Used when logging packet messages.  A sequence number to identify the request.
         /// </summary>
         public uint SeqNo { get; set; }
 
@@ -57,9 +56,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         public int StartTime { get; set; }
 
         /// <summary>
-        /// End Time for the request.
-        /// When we finished processing.
-        /// Doesnt include transmission time.
+        /// End Time for the request. When we finished processing. Doesnt include transmission time.
         /// </summary>
         public int EndTime { get; set; }
 
@@ -149,12 +146,10 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             StringBuilder me = new StringBuilder();
             me.Append(String.Format("OSHttpRequest: {0} {1}\n", HttpMethod, RawUrl));
-
             foreach (string k in Headers.AllKeys)
             {
                 me.Append(String.Format("    {0}: {1}\n", k, Headers[k]));
             }
-
             if (null != RemoteIPEndPoint)
             {
                 me.Append(String.Format("    IP: {0}\n", RemoteIPEndPoint));

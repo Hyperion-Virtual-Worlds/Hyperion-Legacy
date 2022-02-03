@@ -1,9 +1,6 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
- * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
+ * See CONTRIBUTORS.TXT for a full list of copyright holders.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -99,6 +96,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         // contains XmlRpc method name
         private string _methodName;
 
+
         /// <summary>
         /// Instantiate an XmlRpc handler.
         /// </summary>
@@ -116,7 +114,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// when the handler is being looked up.
         /// </remarks>
         public OSHttpXmlRpcHandler(XmlRpcMethod handler, string methodName, Regex path,
-            Dictionary<string, Regex> headers, Regex whitelist)
+                                   Dictionary<string, Regex> headers, Regex whitelist)
             : base(new Regex(@"^POST$", RegexOptions.IgnoreCase | RegexOptions.Compiled), path, null, headers,
                    new Regex(@"^(text|application)/xml", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                    whitelist)
@@ -124,6 +122,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             _handler = handler;
             _methodName = methodName;
         }
+
 
         /// <summary>
         /// Instantiate an XmlRpc handler.
@@ -136,6 +135,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
         }
 
+
         /// <summary>
         /// Invoked by OSHttpRequestPump.
         /// </summary>
@@ -145,13 +145,10 @@ namespace OpenSim.Framework.Servers.HttpServer
             string responseString;
 
             // check whether we are interested in this request
-            if (!XmlRpcMethodMatch(request))
-            {
-                return OSHttpHandlerResult.Pass;
-            }
+            if (!XmlRpcMethodMatch(request)) return OSHttpHandlerResult.Pass;
+
 
             OSHttpResponse resp = new OSHttpResponse(request);
-
             try
             {
                 // reified XmlRpcRequest must still be on the whiteboard
@@ -170,13 +167,13 @@ namespace OpenSim.Framework.Servers.HttpServer
                 resp.Body.Flush();
 
                 resp.Send();
+
             }
             catch (Exception ex)
             {
                 _log.WarnFormat("[OSHttpXmlRpcHandler]: Error: {0}", ex.Message);
                 return OSHttpHandlerResult.Pass;
             }
-
             return OSHttpHandlerResult.Done;
         }
     }

@@ -1,11 +1,6 @@
 ﻿/*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
- * Copyright (c) InWorldz Halcyon Developers
- * Copyright (c) Contributors, http://whitecore-sim.org/
- * Copyright (c) Contributors, http://aurora-sim.org/
- * Copyright (c) Contributors, http://opensimulator.org/
+ * Copyright (c) Contributors, http://whitecore-sim.org/, http://aurora-sim.org, http://opensimulator.org/
+ * See CONTRIBUTORS.TXT for a full list of copyright holders.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -14,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the WhiteCore-Sim Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -30,9 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.IO;
 using System.Text;
+using System;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
@@ -59,11 +54,9 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class HttpServerHandlerHelpers
     {
         public const int CHUNK_SIZE = 8192;
-
         public static byte[] ReadFully(Stream stream)
         {
             byte[] buffer = new byte[CHUNK_SIZE];
-
             using (MemoryStream ms = new MemoryStream())
             {
                 while (true)
@@ -71,9 +64,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     int read = stream.Read(buffer, 0, buffer.Length);
 
                     if (read <= 0)
-                    {
                         return ms.ToArray();
-                    }
 
                     ms.Write(buffer, 0, read);
                 }
@@ -84,24 +75,20 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             int count = content.Length;
             int pos = 0;
-
             while (count > 0)
             {
                 stream.Write(content, pos, Math.Min(CHUNK_SIZE, count)); //Send it
                 count -= CHUNK_SIZE;
                 pos += CHUNK_SIZE;
             }
-
-            // Finish writing
+            //Finish writing
             stream.Flush();
         }
 
         public static void WriteNonChunked(Stream stream, byte[] content)
         {
-            // Send it
-            stream.Write(content, 0, content.Length);
-
-            // Finish writing
+            stream.Write(content, 0, content.Length); //Send it
+            //Finish writing
             stream.Flush();
         }
 
@@ -110,17 +97,13 @@ namespace OpenSim.Framework.Servers.HttpServer
             StringBuilder sb = new StringBuilder();
             byte[] buf = new byte[CHUNK_SIZE];
             int count = 0;
-
             do
             {
                 count = stream.Read(buf, 0, CHUNK_SIZE);
-
                 if (count != 0)
-                {
                     sb.Append(Encoding.UTF8.GetString(buf, 0, count));
-                }
-            } while (count > 0);
 
+            } while (count > 0);
             return sb.ToString();
         }
 
@@ -129,17 +112,13 @@ namespace OpenSim.Framework.Servers.HttpServer
             MemoryStream memStream = new MemoryStream();
             byte[] buf = new byte[CHUNK_SIZE];
             int count = 0;
-
             do
             {
                 count = stream.Read(buf, 0, CHUNK_SIZE);
-
                 if (count != 0)
-                {
                     memStream.Write(buf, 0, count);
-                }
-            } while (count > 0);
 
+            } while (count > 0);
             return memStream.ToArray();
         }
     }

@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -38,8 +35,7 @@ using System.Xml.Serialization;
 namespace OpenSim.Framework.Servers.HttpServer
 {
     /// <summary>
-    /// Makes an asynchronous REST request which
-    /// doesn't require us to do anything with the response.
+    /// Makes an asynchronous REST request which doesn't require us to do anything with the response.
     /// </summary>
     public class RestObjectPoster
     {
@@ -73,13 +69,13 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(buffer.ToArray(), 0, length);
+            // IAsyncResult result = request.BeginGetResponse(AsyncCallback, request);
             request.BeginGetResponse(AsyncCallback, request);
         }
 
         private static void AsyncCallback(IAsyncResult result)
         {
             WebRequest request = (WebRequest) result.AsyncState;
-
             using (WebResponse resp = request.EndGetResponse(result))
             {
             }

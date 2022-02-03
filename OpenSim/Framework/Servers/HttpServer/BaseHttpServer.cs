@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -31,22 +28,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using Amib.Threading;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 using log4net;
 using Nwc.XmlRpc;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
+using Amib.Threading;
+using System.IO.Compression;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
@@ -57,9 +54,9 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// <summary>
         /// Gets or sets the debug level.
         /// </summary>
-        /// <remarks>
+        /// <value>
         /// See MainServer.DebugLevel.
-        /// </remarks>
+        /// </value>
         public int DebugLevel { get; set; }
 
         private volatile uint RequestNumber = 0;
@@ -113,12 +110,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             get
             {
                 string protocol = "http://";
-
                 if (Secure)
-                {
                     protocol = "https://";
-                }
-
                 return protocol;
             }
         }
@@ -128,12 +121,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             get
             {
                 string protocol = "http://";
-
                 if (Secure)
-                {
                     protocol = "https://";
-                }
-
                 return protocol + m_hostName;
             }
         }
@@ -146,12 +135,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             get
             {
                 string protocol = "http://";
-
                 if (Secure)
-                {
                     protocol = "https://";
-                }
-
                 return protocol + m_hostName + ":" + m_port.ToString();
             }
         }
@@ -168,36 +153,27 @@ namespace OpenSim.Framework.Servers.HttpServer
             m_isSecure = false;
 
             if (ipaddr == null)
-            {
                 m_listenIPAddress = IPAddress.Any;
-            }
             else
-            {
                 m_listenIPAddress = ipaddr;
-            }
         }
 
         private  X509Certificate2 GetCertificateFromStore(string certName)
         {
             // Get the certificate store for the current user.
             X509Store store = new X509Store(StoreLocation.CurrentUser);
-
             try
             {
                 store.Open(OpenFlags.ReadOnly);
 
                 // Place all certificates in an X509Certificate2Collection object.
                 X509Certificate2Collection certCollection = store.Certificates;
-
-                // If using a certificate with a trusted root you do not need to FindByTimeValid
+                // If using a certificate with a trusted root you do not need to FindByTimeValid, instead:
+                // currentCerts.Find(X509FindType.FindBySubjectDistinguishedName, certName, true);
                 X509Certificate2Collection currentCerts = certCollection.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
                 X509Certificate2Collection signingCert = currentCerts.Find(X509FindType.FindBySubjectDistinguishedName, certName, false);
-
                 if (signingCert.Count == 0)
-                {
                     return null;
-                }
-
                 // Return the first certificate in the collection, has the right name and is current.
                 return signingCert[0];
             }
@@ -234,8 +210,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         }
 
         /// <summary>
-        /// Add a stream handler to the http server.
-        /// If the handler already exists, then nothing happens.
+        /// Add a stream handler to the http server.  If the handler already exists, then nothing happens.
         /// </summary>
         /// <param name="handler"></param>
         public void AddStreamHandler(IRequestHandler handler)
@@ -248,6 +223,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             {
                 if (!m_streamHandlers.ContainsKey(handlerKey))
                 {
+                    // m_log.DebugFormat("[BASE HTTP SERVER]: Adding handler key {0}", handlerKey);
                     m_streamHandlers.Add(handlerKey, handler);
                 }
             }
@@ -256,9 +232,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         public List<string> GetStreamHandlerKeys()
         {
             lock (m_streamHandlers)
-            {
                 return new List<string>(m_streamHandlers.Keys);
-            }
         }
 
         private static string GetHandlerKey(string httpMethod, string path)
@@ -300,13 +274,13 @@ namespace OpenSim.Framework.Servers.HttpServer
         public List<string> GetXmlRpcHandlerKeys()
         {
             lock (m_rpcHandlers)
-            {
                 return new List<string>(m_rpcHandlers.Keys);
-            }
         }
 
         public bool AddHTTPHandler(string methodName, GenericHTTPMethod handler)
         {
+            //m_log.DebugFormat("[BASE HTTP SERVER]: Registering {0}", methodName);
+
             lock (m_HTTPHandlers)
             {
                 if (!m_HTTPHandlers.ContainsKey(methodName))
@@ -316,18 +290,15 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
             }
 
-            // must already have a handler for that path so return false
+            //must already have a handler for that path so return false
             return false;
         }
 
         public List<string> GetHTTPHandlerKeys()
         {
             lock (m_HTTPHandlers)
-            {
                 return new List<string>(m_HTTPHandlers.Keys);
-            }
         }
-
         public bool AddLLSDHandler(string path, LLSDMethod handler)
         {
             lock (m_llsdHandlers)
@@ -338,34 +309,27 @@ namespace OpenSim.Framework.Servers.HttpServer
                     return true;
                 }
             }
-
             return false;
         }
 
         public List<string> GetLLSDHandlerKeys()
         {
             lock (m_llsdHandlers)
-            {
                 return new List<string>(m_llsdHandlers.Keys);
-            }
         }
 
         private void OnRequest(IAsyncResult result)
         {
             if (m_httpListener == null)
-            {
                 return;
-            }
 
             try
             {
                 HttpListenerContext context = m_httpListener.EndGetContext(result);
 
-                // Immediately set up the next context
+                // *** Immediately set up the next context
                 if (m_httpListener.IsListening)
-                {
                     m_httpListener.BeginGetContext(new AsyncCallback(OnRequest), m_httpListener);
-                }
 
                 m_Threads.QueueWorkItem(HandleRequest, context);
             }
@@ -404,6 +368,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             try
             {
+
                 if (String.IsNullOrEmpty(request.HttpMethod)) // Can't handle empty requests, not wasting a thread
                 {
                     buffer = SendHTML500(response);
@@ -411,15 +376,13 @@ namespace OpenSim.Framework.Servers.HttpServer
                 else if (TryGetStreamHandler(handlerKey, out requestHandler))
                 {
                     if (DebugLevel >= 3)
-                    {
                         LogIncomingToStreamHandler(request, requestHandler);
-                    }
 
                     response.ContentType = requestHandler.ContentType; // Lets do this defaulting before in case handler has varying content type.
 
                     if (requestHandler is IAsyncRequestHandler)
                     {
-                        // Call the request handler. The Response is sent Async from the handler
+                        //  Call the request handler. The Response is sent Async from the handler
                         IAsyncRequestHandler asyncHandler = requestHandler as IAsyncRequestHandler;
                         asyncHandler.Handle(this, path, request, response);
                         return;
@@ -441,19 +404,17 @@ namespace OpenSim.Framework.Servers.HttpServer
                         string requestBody = reader.ReadToEnd();
 
                         reader.Close();
+                        //requestStream.Close();
 
                         Hashtable keysvals = new Hashtable();
                         Hashtable headervals = new Hashtable();
+                        //string host = String.Empty;
 
                         foreach (string queryname in request.QueryString.AllKeys)
-                        {
                             keysvals.Add(queryname, request.QueryString[queryname]);
-                        }
 
                         foreach (string headername in request.Headers.AllKeys)
-                        {
                             headervals[headername] = request.Headers[headername];
-                        }
 
                         headervals["remote_addr"] = request.RemoteIPEndPoint.ToString();
 
@@ -462,7 +423,10 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                         if (keysvals.Contains("method"))
                         {
-                            // TODO: Determine proper implementation
+                            //m_log.Warn("[HTTP]: Contains Method");
+                            //string method = (string)keysvals["method"];
+                            //m_log.Warn("[HTTP]: " + requestBody);
+
                         }
 
                         buffer = DoHTTPGruntWork(HTTPRequestHandler.Handle(path, keysvals), request, response);
@@ -485,12 +449,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                     {
                         case null:
                         case "text/html":
+
                             if (DebugLevel >= 3)
-                            {
                                 m_log.DebugFormat(
                                     "[BASE HTTP SERVER]: HTTP IN {0} :{1} {2} content type handler {3} {4} from {5}",
                                     request.SeqNo, Port, request.ContentType, request.HttpMethod, request.Url.PathAndQuery, request.RemoteIPEndPoint);
-                            }
 
                             buffer = HandleHTTPRequest(request, response);
                             break;
@@ -498,12 +461,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                         case "application/llsd+xml":
                         case "application/xml+llsd":
                         case "application/llsd+json":
+
                             if (DebugLevel >= 3)
-                            {
                                 m_log.DebugFormat(
                                     "[BASE HTTP SERVER]: HTTP IN {0} :{1} {2} content type handler {3} {4} from {5}",
                                     request.SeqNo, Port, request.ContentType, request.HttpMethod, request.Url.PathAndQuery, request.RemoteIPEndPoint);
-                            }
 
                             buffer = HandleLLSDRequests(request, response);
                             break;
@@ -515,31 +477,26 @@ namespace OpenSim.Framework.Servers.HttpServer
                             if (DoWeHaveALLSDHandler(request.RawUrl))
                             {
                                 if (DebugLevel >= 3)
-                                {
                                     LogIncomingToContentTypeHandler(request);
-                                }
 
                                 buffer = HandleLLSDRequests(request, response);
                             }
                             else if (DoWeHaveAHTTPHandler(request.RawUrl))
                             {
                                 if (DebugLevel >= 3)
-                                {
                                     LogIncomingToContentTypeHandler(request);
-                                }
 
                                 buffer = HandleHTTPRequest(request, response);
                             }
                             else
                             {
                                 if (DebugLevel >= 3)
-                                {
                                     LogIncomingToXmlRpcHandler(request);
-                                }
 
                                 // generic login request.
                                 buffer = HandleXmlRpcRequests(request, response);
                             }
+
                             break;
                     }
                 }
@@ -563,7 +520,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                 // time.  This is to avoid logging when it's the client that is slow to process rather than the
                 // server
                 request.EndTime = Environment.TickCount;
-
                 // Every month or so this will wrap and give bad numbers, not really a problem
                 // since its just for reporting
                 int tickdiff = request.EndTime - request.StartTime;
@@ -583,15 +539,17 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
                 else if (DebugLevel >= 4)
                 {
-                    m_log.DebugFormat("[BASE HTTP SERVER]: HTTP IN {0} :{1} took {2}ms",
-                        request.SeqNo, Port, tickdiff);
+                    m_log.DebugFormat(
+                        "[BASE HTTP SERVER]: HTTP IN {0} :{1} took {2}ms",
+                        request.SeqNo,
+                        Port,
+                        tickdiff);
                 }
 
                 if (buffer != null)
                 {          
-                    // find the accept encoding key
+                    //find the accept encoding key
                     string acceptEncodingKey = null;
-
                     foreach (string key in request.Headers.AllKeys)
                     {
                         if (key.ToLower() == "accept-encoding")
@@ -618,16 +576,14 @@ namespace OpenSim.Framework.Servers.HttpServer
                     }
 
                     if (!response.SendChunked)
-                    {
                         response.ContentLength64 = buffer.LongLength;
-                    }
 
                     response.OutputStream.BeginWrite(buffer, 0, buffer.Length, ResponseWriteFinished, Tuple.Create(request, response, requestHandler));
                 }
             }
             catch (Exception e)
             {
-                // fill out request end time to get an actual count in case the exception is thrown in response.Write
+                //fill out request end time to get an actual count in case the exception is thrown in response.Write
                 request.EndTime = Environment.TickCount;
                 int tickdiff = request.EndTime - request.StartTime;
 
@@ -672,7 +628,8 @@ namespace OpenSim.Framework.Servers.HttpServer
                 {
                     parms.Item2.Response.Abort();
                 }
-                catch { }
+                catch 
+                { }
             }
         }
 
@@ -689,9 +646,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 request.RemoteIPEndPoint);
 
             if (DebugLevel >= 5)
-            {
                 LogIncomingInDetail(request);
-            }
         }
 
         private void LogIncomingToContentTypeHandler(OSHttpRequest request)
@@ -706,9 +661,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 request.RemoteIPEndPoint);
 
             if (DebugLevel >= 5)
-            {
                 LogIncomingInDetail(request);
-            }
         }
 
         private void LogIncomingToXmlRpcHandler(OSHttpRequest request)
@@ -722,9 +675,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 request.RemoteIPEndPoint);
 
             if (DebugLevel >= 5)
-            {
                 LogIncomingInDetail(request);
-            }
         }
 
         private void LogIncomingInDetail(OSHttpRequest request)
@@ -779,8 +730,11 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
         }
 
+
         private bool TryGetHTTPHandler(string handlerKey, out GenericHTTPMethod HTTPHandler)
         {
+//            m_log.DebugFormat("[BASE HTTP HANDLER]: Looking for HTTP handler for {0}", handlerKey);
+
             string bestMatch = null;
 
             lock (m_HTTPHandlers)
@@ -810,11 +764,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         }
 
         /// <summary>
-        /// Try all the registered xmlrpc handlers
-        /// when an xmlrpc request is received.
-        /// Sends back an XMLRPC unknown request
-        /// response if no handler is registered
-        /// for the requested method.
+        /// Try all the registered xmlrpc handlers when an xmlrpc request is received.
+        /// Sends back an XMLRPC unknown request response if no handler is registered for the requested method.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
@@ -844,7 +795,8 @@ namespace OpenSim.Framework.Servers.HttpServer
                     m_log.Warn(
                         string.Format(
                             "[BASE HTTP SERVER]: Got XMLRPC request with invalid XML from {0}.  XML was '{1}'.  Sending 404 response.  Exception ",
-                            request.RemoteIPEndPoint, requestBody), e);
+                            request.RemoteIPEndPoint, requestBody),
+                        e);
                 }
                 else if (DebugLevel >= 1)
                 {
@@ -856,6 +808,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             if ((xmlRprcRequest == null) || (methodName == null))
             {
+                //HandleLLSDRequests(request, response);
                 response.ContentType = "text/plain";
                 response.StatusCode = 404;
                 response.StatusDescription = "Not Found";
@@ -878,15 +831,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                 XmlRpcMethod method;
                 bool methodWasFound;
                 bool keepAlive = false;
-
                 lock (m_rpcHandlers)
                 {
                     methodWasFound = m_rpcHandlers.TryGetValue(methodName, out method);
-
                     if (methodWasFound)
-                    {
                         keepAlive = m_rpcHandlersKeepAlive[methodName];
-                    }
                 }
 
                 if (methodWasFound)
@@ -895,7 +844,6 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                     string xff = "X-Forwarded-For";
                     string xfflower = xff.ToLower();
-
                     foreach (string s in request.Headers.AllKeys)
                     {
                         if (s != null && s.Equals(xfflower))
@@ -904,7 +852,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                             break;
                         }
                     }
-
                     xmlRprcRequest.Params.Add(request.Headers.Get(xff)); // Param[3]
 
                     try
@@ -955,6 +902,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private byte[] HandleLLSDRequests(OSHttpRequest request, OSHttpResponse response)
         {
+            //m_log.Warn("[BASE HTTP SERVER]: We've figured out it's a LLSD Request");
             Stream requestStream = request.InputStream;
 
             Encoding encoding = Encoding.UTF8;
@@ -964,6 +912,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             reader.Close();
             requestStream.Close();
 
+            //m_log.DebugFormat("[OGP]: {0}:{1}", request.RawUrl, requestBody);
             // If they ask for it we'll use it.
             response.KeepAlive = request.KeepAlive;
 
@@ -973,11 +922,10 @@ namespace OpenSim.Framework.Servers.HttpServer
             bool LegacyLLSDLoginLibOMV = (requestBody.Contains("passwd") && requestBody.Contains("mac") && requestBody.Contains("viewer_digest"));
 
             if (String.IsNullOrEmpty(requestBody))
+            // Get Request
             {
-                // Get request
                 requestBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><llsd><map><key>request</key><string>get</string></map></llsd>";
             }
-
             try
             {
                 llsdRequest = OSDParser.Deserialize(requestBody);
@@ -987,7 +935,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 m_log.Warn("[BASE HTTP SERVER]: Error - " + ex.Message);
             }
 
-            if (llsdRequest != null)
+            if (llsdRequest != null)// && m_defaultLlsdHandler != null)
             {
                 LLSDMethod llsdhandler = null;
 
@@ -1068,36 +1016,30 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
             }
 
+            // response.ContentType = "application/llsd+json";
+            // return Util.UTF8.GetBytes(OSDParser.SerializeJsonString(llsdResponse));
             response.ContentType = "application/llsd+xml";
             return OSDParser.SerializeLLSDXmlBytes(llsdResponse);
         }
 
         /// <summary>
-        /// Checks if we have an Exact path in the LLSD
-        /// handlers for the path provided
+        /// Checks if we have an Exact path in the LLSD handlers for the path provided
         /// </summary>
         /// <param name="path">URI of the request</param>
-        /// <returns>
-        /// true if we have one, false if not
-        /// </returns>
+        /// <returns>true if we have one, false if not</returns>
         private bool DoWeHaveALLSDHandler(string path)
         {
             string[] pathbase = path.Split('/');
             string searchquery = "/";
 
             if (pathbase.Length < 1)
-            {
                 return false;
-            }
 
             for (int i = 1; i < pathbase.Length; i++)
             {
                 searchquery += pathbase[i];
-
                 if (pathbase.Length - 1 != i)
-                {
                     searchquery += "/";
-                }
             }
 
             string bestMatch = null;
@@ -1107,22 +1049,16 @@ namespace OpenSim.Framework.Servers.HttpServer
                 foreach (string pattern in m_llsdHandlers.Keys)
                 {
                     if (searchquery.StartsWith(pattern) && searchquery.Length >= pattern.Length)
-                    {
                         bestMatch = pattern;
-                    }
                 }
             }
 
             // extra kicker to remove the default XMLRPC login case..  just in case..
             if (path != "/" && bestMatch == "/" && searchquery != "/")
-            {
                 return false;
-            }
 
             if (path == "/")
-            {
                 return false;
-            }
 
             if (String.IsNullOrEmpty(bestMatch))
             {
@@ -1135,34 +1071,28 @@ namespace OpenSim.Framework.Servers.HttpServer
         }
 
         /// <summary>
-        /// Checks if we have an Exact path in
-        /// the HTTP handlers for the path provided
+        /// Checks if we have an Exact path in the HTTP handlers for the path provided
         /// </summary>
         /// <param name="path">URI of the request</param>
-        /// <returns>
-        /// true if we have one, false if not
-        /// </returns>
+        /// <returns>true if we have one, false if not</returns>
         private bool DoWeHaveAHTTPHandler(string path)
         {
             string[] pathbase = path.Split('/');
             string searchquery = "/";
 
             if (pathbase.Length < 1)
-            {
                 return false;
-            }
 
             for (int i = 1; i < pathbase.Length; i++)
             {
                 searchquery += pathbase[i];
-
                 if (pathbase.Length - 1 != i)
-                {
                     searchquery += "/";
-                }
             }
 
             string bestMatch = null;
+
+            //m_log.DebugFormat("[BASE HTTP HANDLER]: Checking if we have an HTTP handler for {0}", searchquery);
 
             lock (m_HTTPHandlers)
             {
@@ -1176,9 +1106,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                 // extra kicker to remove the default XMLRPC login case..  just in case..
                 if (path == "/")
-                {
                     return false;
-                }
 
                 if (String.IsNullOrEmpty(bestMatch))
                 {
@@ -1194,27 +1122,22 @@ namespace OpenSim.Framework.Servers.HttpServer
         private bool TryGetLLSDHandler(string path, out LLSDMethod llsdHandler)
         {
             llsdHandler = null;
-
             // Pull out the first part of the path
             // splitting the path by '/' means we'll get the following return..
             // {0}/{1}/{2}
             // where {0} isn't something we really control 100%
+
             string[] pathbase = path.Split('/');
             string searchquery = "/";
 
             if (pathbase.Length < 1)
-            {
                 return false;
-            }
 
             for (int i = 1; i < pathbase.Length; i++)
             {
                 searchquery += pathbase[i];
-
                 if (pathbase.Length - 1 != i)
-                {
                     searchquery += "/";
-                }
             }
 
             // while the matching algorithm below doesn't require it, we're expecting a query in the form
@@ -1224,6 +1147,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             //
             // now try to get the closest match to the reigstered path
             // at least for OGP, registered path would probably only consist of the /resource/
+
             string bestMatch = null;
 
             lock (m_llsdHandlers)
@@ -1235,10 +1159,9 @@ namespace OpenSim.Framework.Servers.HttpServer
                         if (String.IsNullOrEmpty(bestMatch) || searchquery.Length > bestMatch.Length)
                         {
                             // You have to specifically register for '/' and to get it, you must specificaly request it
+                            //
                             if (pattern == "/" && searchquery == "/" || pattern != "/")
-                            {
                                 bestMatch = pattern;
-                            }
                         }
                     }
                 }
@@ -1267,11 +1190,16 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public byte[] HandleHTTPRequest(OSHttpRequest request, OSHttpResponse response)
         {
+//            m_log.DebugFormat(
+//                "[BASE HTTP SERVER]: HandleHTTPRequest for request to {0}, method {1}",
+//                request.RawUrl, request.HttpMethod);
+
             switch (request.HttpMethod)
             {
                 case "OPTIONS":
                     response.StatusCode = (int)OSHttpStatusCode.SuccessOk;
                     return null;
+
                 default:
                     return HandleContentVerbs(request, response);
             }
@@ -1279,6 +1207,8 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private byte[] HandleContentVerbs(OSHttpRequest request, OSHttpResponse response)
         {
+//            m_log.DebugFormat("[BASE HTTP SERVER]: HandleContentVerbs for request to {0}", request.RawUrl);
+
             // This is a test.  There's a workable alternative..  as this way sucks.
             // We'd like to put this into a text file parhaps that's easily editable.
             //
@@ -1290,6 +1220,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             // I depend on show_login_form being in the secondlife.exe parameters to figure out
             // to display the form, or process it.
             // a better way would be nifty.
+
             byte[] buffer;
 
             Stream requestStream = request.InputStream;
@@ -1298,7 +1229,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             StreamReader reader = new StreamReader(requestStream, encoding);
 
             string requestBody = reader.ReadToEnd();
-
             // avoid warning for now
             reader.ReadToEnd();
             reader.Close();
@@ -1321,6 +1251,9 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             foreach (string queryname in querystringkeys)
             {
+//                m_log.DebugFormat(
+//                    "[BASE HTTP SERVER]: Got query paremeter {0}={1}", queryname, request.QueryString[queryname]);
+
                 // HttpRequest.QueryString.AllKeys returns a one-item array, with a null only,
                 // if passed something without an '=' in the query, such as URL/?abc or URL/?abc+def
                 if (queryname != null)
@@ -1332,6 +1265,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             foreach (string headername in rHeaders)
             {
+//                m_log.Debug("[BASE HTTP SERVER]: " + headername + "=" + request.Headers[headername]);
                 headervals[headername] = request.Headers[headername];
             }
 
@@ -1345,20 +1279,25 @@ namespace OpenSim.Framework.Servers.HttpServer
             keysvals.Add("headers", headervals);
             keysvals.Add("querystringkeys", querystringkeys);
             keysvals.Add("requestvars", requestVars);
+//            keysvals.Add("form", request.Form);
 
             if (keysvals.Contains("method"))
             {
+//                m_log.Debug("[BASE HTTP SERVER]: Contains Method");
                 string method = (string) keysvals["method"];
+//                m_log.Debug("[BASE HTTP SERVER]: " + requestBody);
                 GenericHTTPMethod requestprocessor;
                 bool foundHandler = TryGetHTTPHandler(method, out requestprocessor);
-
                 if (foundHandler)
                 {
                     Hashtable responsedata1 = requestprocessor(keysvals);
                     buffer = DoHTTPGruntWork(responsedata1, request, response);
+
+                    //SendHTML500(response);
                 }
                 else
                 {
+//                    m_log.Warn("[BASE HTTP SERVER]: Handler Not Found");
                     buffer = SendHTML404(response);
                 }
             }
@@ -1366,14 +1305,16 @@ namespace OpenSim.Framework.Servers.HttpServer
             {
                 GenericHTTPMethod requestprocessor;
                 bool foundHandler = TryGetHTTPHandlerPathBased(request.RawUrl, out requestprocessor);
-
                 if (foundHandler)
                 {
                     Hashtable responsedata2 = requestprocessor(keysvals);
                     buffer = DoHTTPGruntWork(responsedata2, request, response);
+
+                    //SendHTML500(response);
                 }
                 else
                 {
+//                    m_log.Warn("[BASE HTTP SERVER]: Handler Not Found2");
                     buffer = SendHTML404(response);
                 }
             }
@@ -1384,27 +1325,22 @@ namespace OpenSim.Framework.Servers.HttpServer
         private bool TryGetHTTPHandlerPathBased(string path, out GenericHTTPMethod httpHandler)
         {
             httpHandler = null;
-
             // Pull out the first part of the path
             // splitting the path by '/' means we'll get the following return..
             // {0}/{1}/{2}
             // where {0} isn't something we really control 100%
+
             string[] pathbase = path.Split('/');
             string searchquery = "/";
 
             if (pathbase.Length < 1)
-            {
                 return false;
-            }
 
             for (int i = 1; i < pathbase.Length; i++)
             {
                 searchquery += pathbase[i];
-
                 if (pathbase.Length - 1 != i)
-                {
                     searchquery += "/";
-                }
             }
 
             // while the matching algorithm below doesn't require it, we're expecting a query in the form
@@ -1414,7 +1350,11 @@ namespace OpenSim.Framework.Servers.HttpServer
             //
             // now try to get the closest match to the reigstered path
             // at least for OGP, registered path would probably only consist of the /resource/
+
             string bestMatch = null;
+
+//            m_log.DebugFormat(
+//                "[BASE HTTP HANDLER]: TryGetHTTPHandlerPathBased() looking for HTTP handler to match {0}", searchquery);
 
             lock (m_HTTPHandlers)
             {
@@ -1426,9 +1366,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                         {
                             // You have to specifically register for '/' and to get it, you must specifically request it
                             if (pattern == "/" && searchquery == "/" || pattern != "/")
-                            {
                                 bestMatch = pattern;
-                            }
                         }
                     }
                 }
@@ -1441,9 +1379,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 else
                 {
                     if (bestMatch == "/" && searchquery != "/")
-                    {
                         return false;
-                    }
 
                     httpHandler =  m_HTTPHandlers[bestMatch];
                     return true;
@@ -1453,6 +1389,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public byte[] DoHTTPGruntWork(Hashtable responsedata, OSHttpRequest request, OSHttpResponse response)
         {
+            //m_log.Info("[BASE HTTP SERVER]: Doing HTTP Grunt work with response");
             int responsecode = (int)responsedata["int_response_code"];
             string responseString = (string)responsedata["str_response_string"];
             string contentType = (string)responsedata["content_type"];
@@ -1462,7 +1399,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             {
                 response.StatusDescription = (string)responsedata["error_status_text"];
             }
-
             if (responsedata.ContainsKey("http_protocol_version"))
             {
                 response.ProtocolVersion = new System.Version((string)responsedata["http_protocol_version"]);
@@ -1476,13 +1412,10 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             // Cross-Origin Resource Sharing with simple requests
             if (responsedata.ContainsKey("access_control_allow_origin"))
-            {
                 response.AddHeader("Access-Control-Allow-Origin", (string)responsedata["access_control_allow_origin"]);
-            }
 
             // The client ignores anything but 200 here for web login, so ensure that this is 200 for that
             response.StatusCode = responsecode;
-
             if (responsecode == (int)OSHttpStatusCode.RedirectMovedPermanently)
             {
                 response.RedirectLocation = (string)responsedata["str_redirect_location"];
@@ -1490,10 +1423,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             if (string.IsNullOrEmpty(contentType))
-            {
                 contentType = "text/html";
-            }
-
             response.AddHeader("Content-Type", contentType);
 
             byte[] buffer;
@@ -1610,10 +1540,10 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             string handlerKey = GetHandlerKey(httpMethod, path);
 
+            //m_log.DebugFormat("[BASE HTTP SERVER]: Removing handler key {0}", handlerKey);
+
             lock (m_streamHandlers)
-            {
                 m_streamHandlers.Remove(handlerKey);
-            }
         }
 
         public void RemoveHTTPHandler(string httpMethod, string path)
@@ -1660,11 +1590,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         public string GetHTTP404()
         {
             string file = Path.Combine(".", "http_404.html");
-
             if (!File.Exists(file))
-            {
                 return getDefaultHTTP404(FullHostName);
-            }
 
             StreamReader sr = File.OpenText(file);
             string result = sr.ReadToEnd();
@@ -1675,11 +1602,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         public string GetHTTP500()
         {
             string file = Path.Combine(".", "http_500.html");
-
             if (!File.Exists(file))
-            {
                 return getDefaultHTTP500();
-            }
 
             StreamReader sr = File.OpenText(file);
             string result = sr.ReadToEnd();
@@ -1698,4 +1622,5 @@ namespace OpenSim.Framework.Servers.HttpServer
             return "<HTML><HEAD><TITLE>500 Internal Server Error</TITLE><BODY><BR /><H1>Ooops!</H1><P>The Halcyon-based server you requested does not support browser logins.</P></BODY></HTML>";
         }
     }
+
 }

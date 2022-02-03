@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -40,11 +37,13 @@ namespace OpenSim.Framework.Servers.HttpServer
     public delegate void ReturnResponse<T>(T reponse);
 
     /// <summary>
-    /// Makes an asynchronous REST request
-    /// with a callback to invoke with the response.
+    /// Makes an asynchronous REST request with a callback to invoke with the response.
     /// </summary>
     public class RestObjectPosterResponse<TResponse>
     {
+//        private static readonly log4net.ILog m_log
+//            = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public ReturnResponse<TResponse> ResponseCallback;
 
         public void BeginPostObject<TRequest>(string requestUrl, TRequest obj)
@@ -79,18 +78,22 @@ namespace OpenSim.Framework.Servers.HttpServer
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(buffer.ToArray(), 0, length);
             requestStream.Close();
+            // IAsyncResult result = request.BeginGetResponse(AsyncCallback, request);
             request.BeginGetResponse(AsyncCallback, request);
         }
 
         private void AsyncCallback(IAsyncResult result)
         {
             WebRequest request = (WebRequest) result.AsyncState;
-
             using (WebResponse resp = request.EndGetResponse(result))
             {
                 TResponse deserial;
                 XmlSerializer deserializer = new XmlSerializer(typeof (TResponse));
                 Stream stream = resp.GetResponseStream();
+
+                // This is currently a bad debug stanza since it gobbles us the response...
+//                StreamReader reader = new StreamReader(stream);
+//                m_log.DebugFormat("[REST OBJECT POSTER RESPONSE]: Received {0}", reader.ReadToEnd());
 
                 deserial = (TResponse) deserializer.Deserialize(stream);
 

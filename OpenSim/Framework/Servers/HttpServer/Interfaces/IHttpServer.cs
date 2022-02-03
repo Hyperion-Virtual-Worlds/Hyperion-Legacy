@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -28,14 +25,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections;
 using System.Security.Authentication;
+using System.Collections;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
     /// <summary>
-    /// Interface to OpenSimulator's built in HTTP server.
-    /// Use this to register handlers (http, llsd, xmlrpc, etc.)
+    /// Interface to OpenSimulator's built in HTTP server.  Use this to register handlers (http, llsd, xmlrpc, etc.)
     /// for given URLs.
     /// </summary>
     public interface IHttpServer
@@ -48,20 +44,17 @@ namespace OpenSim.Framework.Servers.HttpServer
         bool Secure { get; }
 
         /// <summary>
-        /// A well-formed URI for the host region server
-        /// (namely "http://ExternalHostName:Port)
+        /// A well-formed URI for the host region server (namely "http://ExternalHostName:Port)
         /// </summary>
         string ServerURI { get; }
 
         /// <summary>
-        /// The hostname (external IP or dns name)
-        /// that this server is on (without http(s)://)
+        /// The hostname (external IP or dns name) that this server is on (without http(s)://)
         /// </summary>
         string HostName { get; set; }
 
         /// <summary>
-        /// The hostname (external IP or dns name)
-        /// that this server is on (with http(s)://)
+        /// The hostname (external IP or dns name) that this server is on (with http(s)://)
         /// </summary>
         string FullHostName { get; }
 
@@ -87,6 +80,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         
         /// <summary>
         /// Add a handler for an HTTP request.
+        /// </summary>
         /// 
         /// This handler can actually be invoked either as 
         /// 
@@ -108,7 +102,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// In addition, the handler invoked by the HTTP server for any request is the one when best matches the request
         /// URI.  So if a handler for "/myapp/" is registered and a request for "/myapp/page" is received, then
         /// the "/myapp/" handler is invoked if no "/myapp/page" handler exists.
-        /// </summary>
+        /// 
         /// <param name="methodName"></param>
         /// <param name="handler"></param>
         /// <returns>
@@ -125,8 +119,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         bool AddLLSDHandler(string path, LLSDMethod handler);
 
         /// <summary>
-        /// Add a stream handler to the http server.
-        /// If the handler already exists, then nothing happens.
+        /// Add a stream handler to the http server.  If the handler already exists, then nothing happens.
         /// </summary>
         /// <param name="handler"></param>
         void AddStreamHandler(IRequestHandler handler);
@@ -155,9 +148,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         void RemoveXmlRPCHandler(string method);
       
         /// <summary>
-        /// Send the response.
-        /// Used in asynch calls where we the
-        /// request and response are decoupled.
+        /// Send the response.  Used in asynch calls where we the request and response are decoupled.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
@@ -175,8 +166,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         byte[] DoHTTPGruntWork(Hashtable responsedata, OSHttpRequest request, OSHttpResponse response); 
 
         /// <summary>
-        /// Generate a 404 or 500 response that
-        /// can be fed to SendResponse above.
+        /// Generate a 404 or 500 response that can be fed to SendResponse above.
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>

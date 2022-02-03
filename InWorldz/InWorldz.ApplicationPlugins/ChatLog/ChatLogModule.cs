@@ -48,7 +48,7 @@ namespace InWorldz.ApplicationPlugins.ChatLog
     /// [ChatLogModule]
     ///     Enabled = true
     /// 
-    /// into Hyperion.ini.
+    /// into Halcyon.ini.
     /// </summary>
     public class InWorldzChatLogModule : INonSharedRegionModule
     {

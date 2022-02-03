@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSim Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -47,11 +44,13 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// <param name="obj"></param>
         /// <param name="action"></param>
         /// <returns></returns>
+        ///
         /// <exception cref="System.Net.WebException">Thrown if we encounter a
         /// network issue while posting the request.  You'll want to make
         /// sure you deal with this as they're not uncommon</exception>
+        //
         public static void MakeRequest<TRequest, TResponse>(string verb,
-            string requestUrl, TRequest obj, Action<TResponse> action)
+                string requestUrl, TRequest obj, Action<TResponse> action)
         {
             Type type = typeof (TRequest);
 
@@ -93,7 +92,8 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                         try
                         {
-                            deserial = (TResponse) deserializer.Deserialize(response.GetResponseStream());
+                            deserial = (TResponse) deserializer.Deserialize(
+                                    response.GetResponseStream());
                         }
                         catch (System.InvalidOperationException)
                         {
@@ -112,7 +112,8 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                 try
                 {
-                    deserial = (TResponse) deserializer.Deserialize(response.GetResponseStream());
+                    deserial = (TResponse) deserializer.Deserialize(
+                            response.GetResponseStream());
                 }
                 catch (System.InvalidOperationException)
                 {

@@ -9,7 +9,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Halcyon</AssemblyName>
+    <AssemblyName>Hyperion</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -18,7 +18,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>
     </AppDesignerFolder>
-    <RootNamespace>Halcyon</RootNamespace>
+    <RootNamespace>Hyperion</RootNamespace>
     <StartupObject>
     </StartupObject>
     <StartArguments>
@@ -216,7 +216,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Halcyon.addin.xml">
+    <Content Include="Hyperion.addin.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="startuplogo.txt">

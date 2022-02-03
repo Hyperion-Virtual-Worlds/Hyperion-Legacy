@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -49,7 +46,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             m_description = description;
         }
 
-        protected BaseRequestHandler(string httpMethod, string path) : this(httpMethod, path, null, null) 
+        protected BaseRequestHandler(string httpMethod, string path) : 
+        this(httpMethod, path, null, null) 
         {
         }
 
@@ -90,9 +88,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         protected string GetParam(string path)
         {
             if (CheckParam(path))
-            {
                 return path.Substring(m_path.Length);
-            }
 
             return String.Empty;
         }
@@ -100,10 +96,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         protected bool CheckParam(string path)
         {
             if (String.IsNullOrEmpty(path))
-            {
                 return false;
-            }
-
+            
             return path.StartsWith(Path);
         }
 

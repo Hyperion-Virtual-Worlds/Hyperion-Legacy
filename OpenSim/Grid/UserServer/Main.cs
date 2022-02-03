@@ -178,7 +178,7 @@ namespace OpenSim.Grid.UserServer
             RegisterInterface<CommandConsole>(m_console);
             RegisterInterface<UserConfig>(Cfg);
 
-            IConfigSource defaultConfig = new IniConfigSource("Hyperion.ini");
+            IConfigSource defaultConfig = new IniConfigSource("Halcyon.ini");
             IConfig startupConfig = defaultConfig.Configs["Startup"];
             IConfig inventoryConfig = defaultConfig.Configs["Inventory"];
             IConfig jwtConfig = defaultConfig.Configs["JWT"];

@@ -80,7 +80,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
         private Dictionary<UUID, IWorkItemResult> _currentRequests = new Dictionary<UUID, IWorkItemResult>();
 
         /// <summary>
-        /// The path to where the generated region tile will be saved and the start of the file name.  Comes from Hyperion.ini, section WorldMap, entry RegionMapTileExportFilename.
+        /// The path to where the generated region tile will be saved and the start of the file name.  Comes from Halcyon.ini, section WorldMap, entry RegionMapTileExportFilename.
         /// </summary>
         private string regionTileExportFilename = "";
 
@@ -1196,7 +1196,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
         }
 
         /// <summary>
-        /// Fired if the Hyperion.ini entry MaximumTaintedMapTileWaitTime is greater than zero
+        /// Fired if the Halcyon.ini entry MaximumTaintedMapTileWaitTime is greater than zero
         /// </summary>
         private void HandleTaintedMapTimer(object source, ElapsedEventArgs e)
         {

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halcyon", "InWorldz\Halcyon\Halcyon.csproj", "{E586BF1E-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperion", "InWorldz\Hyperion\Hyperion.csproj", "{E586BF1E-0000-0000-0000-000000000000}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halcyon.Data.Inventory.MySQL", "Halcyon\Halcyon.Data.Inventory.MySQL\Halcyon.Data.Inventory.MySQL.csproj", "{62DC97F5-0000-0000-0000-000000000000}"
 EndProject

@@ -1,31 +1,31 @@
 /*
- * Copyright (c) 2015, InWorldz Halcyon Developers
- * All rights reserved.
- * 
+ * Copyright (c) Contributors, https://hyperionvirtual.com
+ * Copyright (c) Virtual World Research Inc.
+ * Copyright (c) Halcyon Grid Developers
+ * Copyright (c) InWorldz Halcyon Developers
+ * Copyright (c) Contributors, http://opensimulator.org/
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- *   * Redistributions of source code must retain the above copyright notice, this
- *     list of conditions and the following disclaimer.
- * 
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- * 
- *   * Neither the name of halcyon nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hyperion Legacy Project nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 using System;
@@ -37,11 +37,11 @@ using log4net;
 using Nini.Config;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes;
 using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
+using OpenSim.Region.Framework.Interfaces;
+using OpenSim.Region.Framework.Scenes;
 
 namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
 {
@@ -103,7 +103,7 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
     /// [AvatarRemoteCommands]
     ///     Enabled = true
     ///     
-    /// to your Hyperion.ini file
+    /// to your Halcyon.ini file
     /// </remarks>
     public class AvatarRemoteCommandModule : ISharedRegionModule
     {
@@ -163,11 +163,8 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
         public void Initialize(IConfigSource source)
         {
             IConfig config = source.Configs["AvatarRemoteCommands"];
-
             if (config == null || !config.GetBoolean("Enabled", false))
-            {
                 return;
-            }
 
             _enabled = true;
         }
@@ -179,9 +176,7 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
         public void AddRegion(Scene scene)
         {
             if (!_enabled)
-            {
                 return;
-            }
 
             _scenes.Add(scene);
 
@@ -198,15 +193,14 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
         public void RemoveRegion(Scene scene)
         {
             if (!_enabled)
-            {
                 return;
-            }
 
             _scenes.Remove(scene);
 
             scene.EventManager.OnAvatarLeavingRegion -= EventManager_OnAvatarLeavingRegion;
             IHttpServer server = MainServer.GetHttpServer(scene.RegionInfo.HttpPort);
             server.RemoveStreamHandler("POST", "/avatarremotecommand");
+
         }
 
         public void Close()
@@ -229,7 +223,7 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
 
         private void EventManager_OnAvatarLeavingRegion(ScenePresence presence, SimpleRegionInfo newRegion)
         {
-            // Add them to the cache
+            //Add them to the cache
             LeavingRegionInfo info = new LeavingRegionInfo() { RegionServerURI = newRegion.InsecurePublicHTTPServerURI, SessionID = presence.ControllingClient.SessionId };
             _avatarRegionCache.AddOrUpdate(presence.UUID, info, CACHE_EXPIRATION_TIME);
         }
@@ -249,36 +243,26 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
                 UUID regionID = map["regionId"].AsUUID();
 
                 Scene scene = _scenes.FirstOrDefault((s) => s.RegionInfo.RegionID == regionID);
-
                 if (scene == null)//No scene found...
-                {
                     return BuildCommandResponse(RemoteCommandResponse.NOTFOUND, null);
-                }
 
                 if (!scene.ConnectionManager.IsAuthorized(userID, sessionID))
                 {
-                    // They might not be in the scene, check if they have left recently
+                    //They might not be in the scene, check if they have left recently
                     LeavingRegionInfo info = null;
-
                     if (!_avatarRegionCache.TryGetValue(userID, out info) || info.SessionID != sessionID)
-                    {
                         return BuildCommandResponse(RemoteCommandResponse.UNAUTHORIZED, null);//Wrong sessionID or was never here
-                    }
 
-                    // They moved out of this region
+                    //They moved out of this region
                     return BuildMovedCommandResponse(userID);
                 }
 
                 ScenePresence presence = scene.GetScenePresence(userID);
-
                 if (presence == null || presence.IsChildAgent)//Make sure that they are actually in the region
-                {
                     return BuildMovedCommandResponse(userID);
-                }
 
-                // Process the command
+                //Process the command
                 RemoteCommandType commandID = (RemoteCommandType)map["id"].AsInteger();
-                
                 switch (commandID)
                 {
                     case RemoteCommandType.AvatarChatCommand:
@@ -288,22 +272,16 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
                         return ProcessAvatarTeleportCommand(presence, map);
                 }
             }
-
             return BuildCommandResponse(RemoteCommandResponse.INVALID, null);
         }
 
         private string BuildMovedCommandResponse(UUID userID)
         {
             LeavingRegionInfo info;
-
             if (_avatarRegionCache.TryGetValue(userID, out info))
-            {
                 return BuildCommandResponse(RemoteCommandResponse.MOVED, info.RegionServerURI);
-            }
             else
-            {
                 return BuildCommandResponse(RemoteCommandResponse.NOTFOUND, null);//we don't know where they are
-            }
         }
 
         private string BuildCommandResponse(RemoteCommandResponse rep, string data)
@@ -315,20 +293,14 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
         {
             OSDMap map = new OSDMap();
             map["status"] = (int)rep;
-
             if (!string.IsNullOrEmpty(data))
-            {
                 map["data"] = data;
-            }
-
             if (newRegionId != UUID.Zero)
-            {
                 map["newRegionId"] = newRegionId.ToString();
-            }
 
             return OSDParser.SerializeJsonString(map);
-        }
 
+        }
         #endregion
 
         #region Command processing
@@ -336,18 +308,15 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
         private string ProcessAvatarChatCommand(ScenePresence presence, OSDMap map)
         {
             IChatModule chatModule = presence.Scene.RequestModuleInterface<IChatModule>();
-
             if (chatModule == null)
-            {
                 return BuildCommandResponse(RemoteCommandResponse.ERROR, "No chat module found");
-            }
 
             OSDMap dataMap = (OSDMap)map["data"];
 
             int channel = dataMap["channel"].AsInteger();
             string message = dataMap["text"].AsString();
 
-            // Send the message
+            //Send the message
             chatModule.OnChatFromClient(presence.ControllingClient, new OSChatMessage
             {
                 Channel = channel,
@@ -377,9 +346,7 @@ namespace InWorldz.ApplicationPlugins.AvatarRemoteCommandModule
             }
 
             if (regionName != presence.Scene.RegionInfo.RegionName) // diff region?
-            {
                 presence.ControllingClient.SendTeleportLocationStart();
-            }
 
             presence.Scene.RequestTeleportLocation(presence.ControllingClient,
                 regionName, pos, lookAt, (uint)TeleportFlags.ViaLocation);

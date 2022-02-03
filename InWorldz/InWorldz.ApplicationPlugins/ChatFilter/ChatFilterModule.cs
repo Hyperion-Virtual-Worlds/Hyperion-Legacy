@@ -1,31 +1,31 @@
 /*
- * Copyright (c) 2015, InWorldz Halcyon Developers
- * All rights reserved.
- * 
+ * Copyright (c) Contributors, https://hyperionvirtual.com
+ * Copyright (c) Virtual World Research Inc.
+ * Copyright (c) Halcyon Grid Developers
+ * Copyright (c) InWorldz Halcyon Developers
+ * Copyright (c) Contributors, http://opensimulator.org/
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- *   * Redistributions of source code must retain the above copyright notice, this
- *     list of conditions and the following disclaimer.
- * 
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- * 
- *   * Neither the name of halcyon nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hyperion Legacy Project nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 using System;
@@ -51,7 +51,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
     /// [ChatFilterModule]
     ///     Enabled = true
     /// 
-    /// into Hyperion.ini.
+    /// into Halcyon.ini.
     /// </summary>
     public class ChatFilterModule : INonSharedRegionModule
     {
@@ -61,6 +61,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
             = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string WORDFILTER_FILE = "wordfilterDictionary.txt";
+
 
         private bool m_enabled = false;
 
@@ -73,6 +74,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         /// The bad words
         /// </summary>
         private string[] m_words;
+
 
         #endregion
 
@@ -91,21 +93,16 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         public void Initialize(IConfigSource source)
         {
             IConfig config = source.Configs[Name];
-
-            if (config == null)
-            {
-                return;
-            }
+            if (config == null) return;
 
             m_enabled = config.GetBoolean("Enabled", m_enabled);
 
             if (m_enabled)
             {
-                // load up words
+                //load up words
                 if (File.Exists(WORDFILTER_FILE))
                 {
                     m_words = File.ReadAllLines(WORDFILTER_FILE);
-                    
                     foreach (var word in m_words)
                     {
                         m_minWordLength = Math.Min(m_minWordLength, word.Length);
@@ -117,6 +114,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
                     m_enabled = false;
                 }
             }
+
         }
 
         public void Close()
@@ -125,32 +123,18 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
-            {
-                return;
-            }
-            
+            if (!m_enabled) return;
+
             scene.EventManager.OnBeforeSendInstantMessage += EventManager_OnBeforeSendInstantMessage;
             scene.EventManager.OnChatFromClient += EventManager_OnChatFromClient;
         }
 
         void EventManager_OnChatFromClient(object sender, OSChatMessage chat)
         {
-            if (!m_enabled)
-            {
-                return;
-            }
+            if (!m_enabled) return;
+            if (String.IsNullOrEmpty(chat.Message) || chat.SenderUUID == chat.DestinationUUID) return;
 
-            if (String.IsNullOrEmpty(chat.Message) || chat.SenderUUID == chat.DestinationUUID)
-            {
-                return;
-            }
-
-            if (chat.Message.Length < m_minWordLength)
-            {
-                // Too small, nothing to filter, dont waste time
-                return;
-            }
+            if (chat.Message.Length < m_minWordLength) return; //too small, nothing to filter, dont waste time
 
             StringBuilder result = new StringBuilder(chat.Message);
             DoFilteringOnStatement(result);
@@ -170,8 +154,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         {
             foreach (string word in m_words)
             {
-                if (i + word.Length > chat.Length)
-                    continue;
+                if (i + word.Length > chat.Length) continue;
 
                 bool found = WordMatchesAtIndex(i, chat, word);
 
@@ -193,7 +176,6 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         private static bool WordMatchesAtIndex(int i, StringBuilder chat, string word)
         {
             bool found = true;
-            
             for (int j = 0; j < word.Length; j++)
             {
                 if (word[j] != chat[j + i])
@@ -202,7 +184,6 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
                     break;
                 }
             }
-            
             return found;
         }
 
@@ -213,21 +194,9 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         /// <returns></returns>
         bool EventManager_OnBeforeSendInstantMessage(GridInstantMessage message)
         {
-            if (!m_enabled)
-            {
-                return true;
-            }
-
-            if (String.IsNullOrEmpty(message.message) || message.fromAgentID == message.toAgentID)
-            {
-                return true;
-            }
-
-            if (message.message.Length < m_minWordLength)
-            {
-                // Too small, nothing to filter, don't waste
-                return true;
-            }
+            if (!m_enabled) return true;
+            if (String.IsNullOrEmpty(message.message) || message.fromAgentID == message.toAgentID) return true;
+            if (message.message.Length < m_minWordLength) return true; //too small, nothing to filter, dont waste time
 
             StringBuilder result = new StringBuilder(message.message);
             DoFilteringOnStatement(result);
@@ -239,10 +208,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
-            {
-                return;
-            }
+            if (!m_enabled) return;
 
             scene.EventManager.OnBeforeSendInstantMessage -= EventManager_OnBeforeSendInstantMessage;
             scene.EventManager.OnChatFromClient -= EventManager_OnChatFromClient;
@@ -257,5 +223,7 @@ namespace InWorldz.ApplicationPlugins.ChatFilterModule
         #region Functionality
 
         #endregion
+
+
     }
 }

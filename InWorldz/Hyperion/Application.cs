@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Contributors, https://hyperionvirtual.com
+ * Copyright (c) Virtual World Research Inc.
+ * Copyright (c) Halcyon Grid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -9,7 +12,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the OpenSimulator Project nor the
+ *     * Neither the name of the Hyperion Legacy Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -38,7 +41,7 @@ using OpenSim.Framework.Console;
 namespace OpenSim
 {
     /// <summary>
-    /// Starting class for the OpenSimulator Region
+    /// Starting class for the Region
     /// </summary>
     public static class Application
     {
@@ -59,11 +62,12 @@ namespace OpenSim
 
         /// <summary>
         /// Instance of the OpenSim class.
-        /// This could be OpenSim or OpenSimBackground depending on the configuration
+        /// This could be OpenSim or OpenSimBackground
+        /// depending on the configuration
         /// </summary>
         private static OpenSimBase m_sim = null;
 
-        // could move our main function into OpenSimMain and kill this class
+        //could move our main function into OpenSimMain and kill this class
         public static void Main(string[] args)
         {
             // Under any circumstance other than an explicit exit the exit code should be 1.
@@ -82,32 +86,32 @@ namespace OpenSim
             var pidFile = new PIDFileManager(configSource.Configs["Startup"].GetString("pidfile", string.Empty));
 
             pidFile.SetStatus(PIDFileManager.Status.Starting);
-            
+
             // Configure Log4Net
             configSource.AddSwitch("Startup", "logconfig");
             string logConfigFile = configSource.Configs["Startup"].GetString("logconfig", String.Empty);
-            
+
             if (!String.IsNullOrEmpty(logConfigFile))
             {
                 XmlConfigurator.Configure(new System.IO.FileInfo(logConfigFile));
-                m_log.InfoFormat("[HALCYON MAIN]: configured log4net using \"{0}\" as configuration file",  logConfigFile);
+                m_log.InfoFormat("[Hyperion Legacy]: configured log4net using \"{0}\" as configuration file", logConfigFile);
             } 
             else
             {
                 XmlConfigurator.Configure();
-                m_log.Info("[HALCYON MAIN]: configured log4net using default Halcyon.exe.config");
+                m_log.Info("[Hyperion Legacy]: configured log4net using default Hyperion.exe.config");
             }
 
-            m_log.Info("Performing compatibility checks... ");
+            m_log.Info("[Hyperion Legacy]: Performing compatibility checks... ");
             string supported = String.Empty;
 
             if (Util.IsEnvironmentSupported(ref supported))
             {
-                m_log.Info("Environment is compatible.\n");
+                m_log.Info("[Hyperion Legacy]: Environment is compatible.\n");
             }
             else
             {
-                m_log.Warn("Environment is unsupported (" + supported + ")\n");
+                m_log.Warn("[Hyperion Legacy]: Environment is unsupported (" + supported + ")\n");
             }
 
             // Configure nIni aliases and localles
@@ -156,7 +160,7 @@ namespace OpenSim
                 m_sim.Startup();
 
                 pidFile.SetStatus(PIDFileManager.Status.Running);
-                
+
                 while (true)
                 {
                     try
@@ -172,10 +176,12 @@ namespace OpenSim
             }
         }
 
-        private static bool _IsHandlingException = false; // Make sure we don't go recursive on ourself
+        // Make sure we do not go recursive on ourselves
+        private static bool _IsHandlingException = false;
 
         /// <summary>
-        /// Global exception handler -- all unhandlet exceptions end up here :)
+        /// Global exception handler
+        /// all unhandlet exceptions end up here
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -187,6 +193,7 @@ namespace OpenSim
             }
 
             _IsHandlingException = true;
+
             // TODO: Add config option to allow users to turn off error reporting
             // TODO: Post error report (disabled for now)
 
@@ -197,7 +204,7 @@ namespace OpenSim
 
             msg += "Exception: " + e.ExceptionObject.ToString() + "\r\n";
             Exception ex = (Exception) e.ExceptionObject;
-            
+
             if (ex.InnerException != null)
             {
                 msg += "InnerException: " + ex.InnerException.ToString() + "\r\n";
@@ -206,7 +213,7 @@ namespace OpenSim
             msg += "\r\n";
             msg += "Application is terminating: " + e.IsTerminating.ToString() + "\r\n";
 
-            m_log.ErrorFormat("[APPLICATION]: {0}", msg);
+            m_log.ErrorFormat("[Application]: {0}", msg);
 
             if (m_saveCrashDumps)
             {
@@ -217,9 +224,9 @@ namespace OpenSim
                     {
                         Directory.CreateDirectory(m_crashDir);
                     }
-                    
+
                     string log = Util.GetUniqueFilename(ex.GetType() + ".txt");
-                    
+
                     using (StreamWriter m_crashLog = new StreamWriter(Path.Combine(m_crashDir, log)))
                     {
                         m_crashLog.WriteLine(msg);
@@ -229,7 +236,7 @@ namespace OpenSim
                 }
                 catch (Exception e2)
                 {
-                    m_log.ErrorFormat("[CRASH LOGGER CRASHED]: {0}", e2);
+                    m_log.ErrorFormat("[Hyperion Legacy Crash Logger]: {0}", e2);
                 }
             }
 

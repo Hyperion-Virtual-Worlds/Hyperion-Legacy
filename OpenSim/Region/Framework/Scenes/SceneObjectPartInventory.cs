@@ -26,16 +26,16 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using log4net;
 using OpenMetaverse;
+using log4net;
 using OpenSim.Framework;
 using OpenSim.Framework.Communications.Cache;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes.Scripting;
+using System.Text;
 
 namespace OpenSim.Region.Framework.Scenes
 {
@@ -46,9 +46,9 @@ namespace OpenSim.Region.Framework.Scenes
         private string m_inventoryFileName = String.Empty;
         private int m_inventoryFileNameSerial = 0;
         
-        /// <summary>
+        /// <value>
         /// The part to which the inventory belongs.
-        /// </summary>
+        /// </value>
         private SceneObjectPart m_part;
 
         /// <summary>
@@ -72,18 +72,18 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         internal bool HasInventoryChanged;
         
-        /// <summary>
+        /// <value>
         /// Inventory serial number
-        /// </summary>
+        /// </value>
         protected internal uint Serial
         {
             get { return m_inventorySerial; }
             set { m_inventorySerial = value; }
         }
 
-        /// <summary>
+        /// <value>
         /// Raw inventory data
-        /// </summary>
+        /// </value>
         protected internal TaskInventoryDictionary Items
         {
             get { return m_items; }
@@ -109,7 +109,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             SceneObjectPartInventory newInventory = new SceneObjectPartInventory(part);
 
-            // also copy the delete list
+            //also copy the delete list
             newInventory._removedItems = new List<UUID>(_removedItems);
 
             // Duplicate the Contents now, skipping no-copy items.
@@ -196,7 +196,6 @@ namespace OpenSim.Region.Framework.Scenes
                 HasInventoryChanged = true;
                 m_part.ParentGroup.HasGroupChanged = true;
                 IList<TaskInventoryItem> items = new List<TaskInventoryItem>(Items.Values);
-                
                 foreach (TaskInventoryItem item in items)
                 {
                     if (ownerId != item.OwnerID)
@@ -224,7 +223,6 @@ namespace OpenSim.Region.Framework.Scenes
                 HasInventoryChanged = true;
                 m_part.ParentGroup.HasGroupChanged = true;
                 IList<TaskInventoryItem> items = new List<TaskInventoryItem>(Items.Values);
-                
                 foreach (TaskInventoryItem item in items)
                 {
                     if (groupID != item.GroupID)
@@ -258,9 +256,8 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         public void RemoveScriptInstances()
         {
-            // using a copy here to break a the chain of locks
+            //using a copy here to break a the chain of locks
             List<TaskInventoryItem> itemsToRemove;
-            
             lock (Items)
             {
                 itemsToRemove = new List<TaskInventoryItem>(Items.Values);
@@ -274,6 +271,7 @@ namespace OpenSim.Region.Framework.Scenes
                     m_part.RemoveScriptEvents(item.ItemID);
                 }
             }
+            
         }
 
         /// <summary>
@@ -369,7 +367,6 @@ namespace OpenSim.Region.Framework.Scenes
         public void RemoveScriptInstance(UUID itemId)
         {
             bool contains;
-            
             lock (m_items)
             {
                 contains = m_items.ContainsKey(itemId);
@@ -402,9 +399,7 @@ namespace OpenSim.Region.Framework.Scenes
                 foreach (TaskInventoryItem item in Items.Values)
                 {
                     if (item.Name == name)
-                    {
                         return true;
-                    }
                 }
             }
 
@@ -420,24 +415,16 @@ namespace OpenSim.Region.Framework.Scenes
         private string FindAvailableInventoryName(string name)
         {
             if (!InventoryContainsName(name))
-            {
                 return name;
-            }
 
             int suffix=1;
-            
             while (suffix < 256)
             {
                 string tryName=String.Format("{0} {1}", name, suffix);
-
                 if (!InventoryContainsName(tryName))
-                {
                     return tryName;
-                }
-
                 suffix++;
             }
-
             return String.Empty;
         }
 
@@ -490,7 +477,6 @@ namespace OpenSim.Region.Framework.Scenes
         protected void AddInventoryItem(string name, TaskInventoryItem item, bool allowedDrop, bool fireEvents, ReplaceItemArgs replaceArgs)
         {
             name = FindAvailableInventoryName(name);
-            
             if (String.IsNullOrEmpty(name))
                 return;
 
@@ -506,19 +492,16 @@ namespace OpenSim.Region.Framework.Scenes
             if (fireEvents)
             {
                 if (allowedDrop)
-                {
                     m_part.TriggerScriptChangedEvent(Changed.ALLOWED_DROP);
-                }
                 else
-                {
                     m_part.TriggerScriptChangedEvent(Changed.INVENTORY);
-                }
             }
 
             m_inventorySerial++;
+            //m_inventorySerial += 2;
             HasInventoryChanged = true;
 
-            // may be parentless briefly while a copy is performed
+            //may be parentless briefly while a copy is performed
             if (m_part.ParentGroup != null)
             {
                 m_part.ParentGroup.HasGroupChanged = true;
@@ -569,23 +552,18 @@ namespace OpenSim.Region.Framework.Scenes
         public TaskInventoryItem GetInventoryItem(UUID itemId)
         {
             TaskInventoryItem item;
-            
             lock (m_items)
             {
+                
                 if (m_items.TryGetValue(itemId, out item))
                 {
                     // Synchronize ScenePermBits.SLAM with InventoryItemFlags.ObjectSlamPerm
                     if (item.InvType == (int)InventoryType.Object)
                     {
                         if ((item.Flags & (uint)InventoryItemFlags.ObjectSlamPerm) != 0)
-                        {
                             item.CurrentPermissions |= ScenePermBits.SLAM;
-                        }
-
                         if ((item.CurrentPermissions & ScenePermBits.SLAM) != 0)
-                        {
                             item.Flags |= (uint)InventoryItemFlags.ObjectSlamPerm;
-                        }
                     }
                     else
                     {
@@ -609,16 +587,13 @@ namespace OpenSim.Region.Framework.Scenes
         public bool UpdateTaskInventoryItemAsset(UUID ParentPartID, UUID ItemID, UUID AssetID)
         {
             if (AssetID == UUID.Zero)
-            {
                 return false;
-            }
 
             lock (m_items)
             {
                 if (m_items.ContainsKey(ItemID))
                 {
                     TaskInventoryItem item = m_items[ItemID];
-                    
                     if (item.AssetID == AssetID)
                     {
                         // the caller needs to let us do the update here, or we don't have the previous value.
@@ -626,7 +601,6 @@ namespace OpenSim.Region.Framework.Scenes
                             "UpdateTaskInventoryItemAsset for item {0} already has asset updated {1}.",
                             item.ItemID, AssetID);
                     }
-                    
                     item.AssetID = AssetID;
                     m_inventorySerial++;
                     m_part.TriggerScriptChangedEvent(Changed.INVENTORY);
@@ -673,9 +647,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                     // Check if next owner perms were changed
                     if (item.InvType == (int)InventoryType.Object)
-                    {
                         slam = (item.NextPermissions != fromItem.NextPermissions);
-                    }
 
                     // Now update specific fields from the specified item directly to the inventory item (while m_items is locked).
                     item.Name = fromItem.Name;
@@ -729,27 +701,17 @@ namespace OpenSim.Region.Framework.Scenes
             // a *second* time before the viewer updates the Contents to remove it. This change just handle 
             // the itemID no longer being present in the items list.
             TaskInventoryItem item;
-            
             if (!m_items.TryGetValue(itemID, out item))
                 return;
 
             InventoryType type = (InventoryType) item.InvType;
-
             if (type == InventoryType.LSL) // Script
-            {
                 scriptUpdate = true;
-            }
-
             if ((replaceArgs != null) && (replaceArgs.ReplacementItem != null))
-            {
                 newItem = replaceArgs.ReplacementItem;
-            }
 
             if (m_items.Remove(itemID))
-            {
                 _removedItems.Add(itemID);
-            }
-
             m_inventorySerial++;
             m_part.TriggerScriptChangedEvent(Changed.INVENTORY);
             HasInventoryChanged = true;
@@ -765,7 +727,6 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 HandleChangedScripts(newItem, replaceArgs);
             }
-            
             m_part.ScheduleFullUpdate(PrimUpdateFlags.PrimFlags);
         }
 
@@ -776,28 +737,24 @@ namespace OpenSim.Region.Framework.Scenes
         public int GetScriptedControlsCount()
         {
             int total = 0;
-            
             lock (m_items)
             {
                 foreach (TaskInventoryItem item in m_items.Values)
                 {
                     if ((InventoryType)item.Type == InventoryType.LSL)
                     {
+//                        m_log.WarnFormat("[CONTROLS]: Item {0} has control sets: {1}", item.ItemID, item.HasScriptedControls);
                         if (item.HasScriptedControls)
-                        {
                             total++;
-                        }
                     }
                 }
             }
-
             return total;
         }
 
         private void HandleChangedScripts(TaskInventoryItem newItem, ReplaceItemArgs replaceArgs)
         {
             int scriptcount = 0;
-            
             foreach (TaskInventoryItem item in m_items.Values)
             {
                 if ((InventoryType)item.Type == InventoryType.LSL)
@@ -807,13 +764,9 @@ namespace OpenSim.Region.Framework.Scenes
             }
 
             if (scriptcount > 0)
-            {
                 m_part.AddFlag(PrimFlags.Scripted);
-            }
             else
-            {
                 m_part.RemFlag(PrimFlags.Scripted);
-            }
 
             // Update for loss of other events (e.g. money, touch)
             m_part.DoAggregateScriptEvents();
@@ -821,7 +774,6 @@ namespace OpenSim.Region.Framework.Scenes
             if (replaceArgs != null)
             {
                 Scene scene = m_part.ParentGroup.Scene;
-                
                 if (replaceArgs.Running > 0)
                 {
                     m_part.Inventory.CreateScriptInstance(newItem, replaceArgs.StartParam, ScriptStartFlags.None, scene.DefaultScriptEngine, 0, null);
@@ -860,7 +812,6 @@ namespace OpenSim.Region.Framework.Scenes
                 }
 
                 int type = m_items[itemID].InvType;
-                
                 if (type == 10) // Script
                 {   
                     // _RemoveItem will be called asynchronously from the script engine thread
@@ -872,11 +823,9 @@ namespace OpenSim.Region.Framework.Scenes
                     // No scripts to wait for, remove the item right away.
                     _ReplaceItem(m_part, itemID, allowedDrop, fireEvents, replaceArgs);
                 }
-                
                 return type;
             }
         }
-
         /// <summary>
         /// Remove an item from this prim's inventory
         /// WARNING: This operation is asynchronous if the item is a script!
@@ -899,6 +848,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             if (needNew)
             {
+                // if (!String.IsNullOrEmpty(m_inventoryFileName)) xferManager.RemoveNewFile(m_inventoryFileName); // replace existing with new update
                 m_inventoryFileName = "inventory_" + UUID.Random().ToString() + ".tmp";
             }
         }
@@ -924,6 +874,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             lock (m_items)
             {
+//                int items = 0;
                 foreach (TaskInventoryItem item in m_items.Values)
                 {
                     UUID ownerID = item.OwnerID;
@@ -939,6 +890,7 @@ namespace OpenSim.Region.Framework.Scenes
                     {
                         itemID = item.AssetID.ToString();
                         desc = item.Description;
+//                        m_log.DebugFormat("[ASSETS]: RequestInventoryFile returning item #{0} itemID {1} asset {2}", ++items, item.ItemID, item.AssetID);
                     }
                     else
                     {
@@ -985,19 +937,15 @@ namespace OpenSim.Region.Framework.Scenes
                     invString.AddSectionEnd();
                 }
             }
-
             invString.AddEnd();
 
             fileData = Utils.StringToBytes(invString.BuildString.ToString());
-            
             if (fileData.Length > 2)
             {
                 // There is inventory to send. Allocate temp file.
                 UpdateInventoryTempFileName(xferManager);
-                
                 // Add the data to the NewFiles list and await the viewer request for it.
                 xferManager.AddNewFile(m_inventoryFileName, fileData);
-                
                 // Notify the viewer of the available file download.
                 client.SendTaskInventory(m_part.UUID, (short)m_inventorySerial, Utils.StringToBytes(m_inventoryFileName));
             }
@@ -1011,9 +959,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Returns the list of deleted item UUIDs for this inventory
         /// </summary>
-        /// <returns>
-        /// The list of deleted items
-        /// </returns>
+        /// <returns>The list of deleted items</returns>
         public KeyValuePair<UUID, IEnumerable<UUID>> GetDeletedItemList()
         {
             lock (m_items)
@@ -1049,7 +995,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public class InventoryStringBuilder
         {
-            public StringBuilder BuildString = new StringBuilder(1024);
+            public StringBuilder BuildString = new StringBuilder();
 
             public InventoryStringBuilder(UUID folderID, UUID parentID)
             {
@@ -1062,12 +1008,12 @@ namespace OpenSim.Region.Framework.Scenes
 
             public void AddEnd()
             {
-                BuildString.Append("\n\t}");
+                BuildString.Append("\t}");  // no terminating \n
             }
 
             public void AddItemStart()
             {
-                BuildString.Append("\tinv_item\t0\n\t{\n");
+                BuildString.Append("\tinv_item\t0\n");
                 AddSectionStart();
             }
 
@@ -1113,7 +1059,6 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         private const uint PERM_MCT = (uint)PermissionMask.Copy | (uint)PermissionMask.Modify | (uint)PermissionMask.Transfer;
-        
         public uint MaskEffectivePermissions()
         {
             uint mask = ScenePermBits.BASEMASK;
@@ -1123,30 +1068,17 @@ namespace OpenSim.Region.Framework.Scenes
                 foreach (TaskInventoryItem item in m_items.Values)
                 {
                     if ((item.CurrentPermissions & (uint)PermissionMask.Copy) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Copy;
-                    }
-
                     if ((item.CurrentPermissions & (uint)PermissionMask.Transfer) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Transfer;
-                    }
-
                     if ((item.CurrentPermissions & (uint)PermissionMask.Modify) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Modify;
-                    }
                 }
             }
-
             if ((mask & PERM_MCT) != PERM_MCT)
-            {
                 mask &= ~(uint)PermissionMask.Export;
-            }
-
             return mask;
         }
-
         public uint MaskEffectiveNextPermissions()
         {
             uint mask = ScenePermBits.BASEMASK;
@@ -1156,27 +1088,15 @@ namespace OpenSim.Region.Framework.Scenes
                 foreach (TaskInventoryItem item in m_items.Values)
                 {
                     if ((item.CurrentPermissions & item.NextPermissions & (uint)PermissionMask.Copy) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Copy;
-                    }
-
                     if ((item.CurrentPermissions & item.NextPermissions & (uint)PermissionMask.Transfer) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Transfer;
-                    }
-
                     if ((item.CurrentPermissions & item.NextPermissions & (uint)PermissionMask.Modify) == 0)
-                    {
                         mask &= ~(uint)PermissionMask.Modify;
-                    }
                 }
             }
-
             if ((mask & PERM_MCT) != PERM_MCT)
-            {
                 mask &= ~(uint)PermissionMask.Export;
-            }
-
             return mask;
         }
 
@@ -1215,7 +1135,6 @@ namespace OpenSim.Region.Framework.Scenes
                     }
                 }
             }
-
             return ownerChanged;
         }
 
@@ -1229,7 +1148,6 @@ namespace OpenSim.Region.Framework.Scenes
                     item.BasePermissions = perms;
                 }
             }
-            
             m_inventorySerial++;
             HasInventoryChanged = true;
         }
@@ -1257,9 +1175,7 @@ namespace OpenSim.Region.Framework.Scenes
             lock (m_items)
             {
                 foreach (TaskInventoryItem item in m_items.Values)
-                {
                     ret.Add(item.ItemID);
-                }
             }
 
             return ret;
@@ -1267,36 +1183,27 @@ namespace OpenSim.Region.Framework.Scenes
         
         public Dictionary<UUID, string> GetScriptStates(StopScriptReason stopScriptReason)
         {
-            Dictionary<UUID, string> ret = new Dictionary<UUID, string>();
-
+            Dictionary<UUID, string> ret = new Dictionary<UUID, string>(); 
+            
             // Make sure we have a scene before we make this call.  GetScriptStates gets called
             // from ToXml in SOG which is static and therefore a scene may not exist.
             if (m_part.ParentGroup.Scene == null)
-            {
                 return ret;
-            }
 
             IScriptModule[] engines = m_part.ParentGroup.Scene.RequestModuleInterfaces<IScriptModule>();
-
             if (engines.Length == 0)
-            {
                 return ret;
-            }
 
             IScriptModule engine = engines[0];
-
             if (engine == null)   // happens under Phlox if disabled
-            {
                 return ret;
-            }
 
             List<TaskInventoryItem> items;
-            
             lock (m_items)
             {
-                // we dont want to hold a lock here, as the script engine will be
-                // holding locks and making us wait for the states during these requests
-                // so we make a copy here
+                //we dont want to hold a lock here, as the script engine will be
+                //holding locks and making us wait for the states during these requests
+                //so we make a copy here
                 items = new List<TaskInventoryItem>(m_items.Values);
             }
 
@@ -1305,14 +1212,12 @@ namespace OpenSim.Region.Framework.Scenes
                 if (item.InvType == (int)InventoryType.LSL)
                 {
                     string n = engine.GetXMLState(item.ItemID, stopScriptReason);
-                    
                     if (!String.IsNullOrEmpty(n))
                     {
                         ret[item.ItemID] = n;
                     }
                 }
             }
-
             return ret;
         }
 
@@ -1323,31 +1228,22 @@ namespace OpenSim.Region.Framework.Scenes
             // Make sure we have a scene before we make this call.  GetScriptStates gets called
             // from ToXml in SOG which is static and therefore a scene may not exist.
             if (m_part.ParentGroup == null || m_part.ParentGroup.Scene == null)
-            {
                 return ret;
-            }
 
             IScriptModule[] engines = m_part.ParentGroup.Scene.RequestModuleInterfaces<IScriptModule>();
-
             if (engines.Length == 0)
-            {
                 return ret;
-            }
 
             IScriptModule engine = engines[0];
-
             if (engine == null)     // happens under Phlox if disabled
-            {
                 return ret;
-            }
 
             List<TaskInventoryItem> items;
-            
             lock (m_items)
             {
-                // we dont want to hold a lock here, as the script engine will be
-                // holding locks and making us wait for the states during these requests
-                // so we make a copy here
+                //we dont want to hold a lock here, as the script engine will be
+                //holding locks and making us wait for the states during these requests
+                //so we make a copy here
                 items = new List<TaskInventoryItem>(m_items.Values);
             }
 
@@ -1356,7 +1252,6 @@ namespace OpenSim.Region.Framework.Scenes
                 if (item.InvType == (int)InventoryType.LSL)
                 {
                     byte[] n = engine.GetBinaryStateSnapshot(item.ItemID, stopScriptReason);
-                    
                     if (n != null)
                     {
                         ret[item.ItemID] = n;
@@ -1372,44 +1267,33 @@ namespace OpenSim.Region.Framework.Scenes
             // Make sure we have a scene before we make this call.  GetScriptStates gets called
             // from ToXml in SOG which is static and therefore a scene may not exist.
             if (m_part.ParentGroup == null || m_part.ParentGroup.Scene == null)
-            {
                 return new Tuple<Dictionary<UUID, byte[]>, Dictionary<UUID, byte[]>>(new Dictionary<UUID, byte[]>(), new Dictionary<UUID, byte[]>());
-            }
 
             IScriptModule[] engines = m_part.ParentGroup.Scene.RequestModuleInterfaces<IScriptModule>();
-
             if (engines.Length == 0)
-            {
                 return new Tuple<Dictionary<UUID, byte[]>, Dictionary<UUID, byte[]>>(new Dictionary<UUID, byte[]>(), new Dictionary<UUID, byte[]>());
-            }
 
             IScriptModule engine = engines[0];
-
             if (engine == null)    // happens under Phlox if disabled
-            {
                 return new Tuple<Dictionary<UUID, byte[]>, Dictionary<UUID, byte[]>>(new Dictionary<UUID, byte[]>(), new Dictionary<UUID, byte[]>());
-            }
 
             List<TaskInventoryItem> items;
-            
             lock (m_items)
             {
-                // we dont want to hold a lock here, as the script engine will be
-                // holding locks and making us wait for the states during these requests
-                // so we make a copy here
+                //we dont want to hold a lock here, as the script engine will be
+                //holding locks and making us wait for the states during these requests
+                //so we make a copy here
                 items = new List<TaskInventoryItem>(m_items.Values);
             }
 
             var states = new Dictionary<UUID, byte[]>();
             List<UUID> scriptAssetIds = new List<UUID>();
-            
             foreach (TaskInventoryItem item in items)
             {
                 if (item.InvType == (int)InventoryType.LSL)
                 {
                     scriptAssetIds.Add(item.AssetID);
                     byte[] n = engine.GetBinaryStateSnapshot(item.ItemID, stopScriptReason);
-                    
                     if (n != null)
                     {
                         states[item.ItemID] = n;
@@ -1425,7 +1309,6 @@ namespace OpenSim.Region.Framework.Scenes
         public IList<TaskInventoryItem> GetScripts()
         {
             List<TaskInventoryItem> items = new List<TaskInventoryItem>();
-            
             lock (m_items)
             {
                 foreach (TaskInventoryItem item in m_items.Values)
@@ -1439,5 +1322,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             return items;
         }
+
+        
     }
 }

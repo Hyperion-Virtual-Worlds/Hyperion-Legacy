@@ -30,12 +30,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using Nini.Config;
-using OpenSim;
 using OpenSim.Framework;
+using OpenSim;
+using Nini.Config;
+using System.IO;
 
 namespace InWorldz.ApplicationPlugins.ChatLog
 {
@@ -48,15 +48,18 @@ namespace InWorldz.ApplicationPlugins.ChatLog
     ///     Backend = FileBackend
     ///     File    = Chat.log
     /// 
-    /// into Hyperion.ini.
+    /// into Halcyon.ini.
     /// </summary>
     public class InworldzChatLogMessageFileBackend : IApplicationPlugin, IChatMessageLogBackend
     {
         #region Declares
 
+        //private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private bool m_enabled = false;
         private string m_fileName = "Chat.log";
         private TextWriter m_fileWriter = null;
+
+
 
         #endregion
 
@@ -65,11 +68,7 @@ namespace InWorldz.ApplicationPlugins.ChatLog
         public void Initialize(OpenSimBase openSim)
         {
             IConfig config = openSim.ConfigSource.Source.Configs["ChatLogModule"];
-
-            if (config == null)
-            {
-                return;
-            }
+            if (config == null) return;
 
             m_enabled = config.GetString("Backend", String.Empty) == "FileBackend";
             m_fileName = config.GetString("File", m_fileName);
@@ -101,15 +100,9 @@ namespace InWorldz.ApplicationPlugins.ChatLog
 
         public void Dispose()
         {
-            if (!m_enabled)
-            {
-                return;
-            }
-
+            if (!m_enabled) return;
             if (m_fileWriter != null)
-            {
                 m_fileWriter.Close();
-            }
         }
 
         #endregion

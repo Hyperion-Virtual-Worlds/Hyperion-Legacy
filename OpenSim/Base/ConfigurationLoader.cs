@@ -58,7 +58,7 @@ namespace OpenSim
             IConfig startupConfig = configSource.Configs["Startup"];
 
             //old style or new style settings?
-            string iniFileName = startupConfig.GetString("inifile", "Hyperion.ini");
+            string iniFileName = startupConfig.GetString("inifile", "Halcyon.ini");
             ApplicationBase.iniFilePath = Path.Combine(Util.configDir(), iniFileName);
 
             string masterFileName = startupConfig.GetString("inimaster", String.Empty);

@@ -1,9 +1,6 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
- * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
+ * See CONTRIBUTORS.TXT for a full list of copyright holders.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -62,7 +59,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// regexs</param>
         /// <param name="whitelist">null or IP address whitelist</param>
         public OSHttpHttpHandler(GenericHTTPMethod handler, Regex method, Regex path,
-            Dictionary<string, Regex> query, Dictionary<string, Regex> headers, Regex whitelist)
+                                 Dictionary<string, Regex> query,
+                                 Dictionary<string, Regex> headers, Regex whitelist)
             : base(method, path, query, headers, new Regex(@"^text/html", RegexOptions.IgnoreCase | RegexOptions.Compiled),
                    whitelist)
         {
@@ -90,8 +88,9 @@ namespace OpenSim.Framework.Servers.HttpServer
             string responseString = (string)responseData["str_response_string"];
             string contentType = (string)responseData["content_type"];
 
-            // Even though only one other part of the entire code uses HTTPHandlers, we shouldn't expect this
-            // and should check for NullReferenceExceptions
+            //Even though only one other part of the entire code uses HTTPHandlers, we shouldn't expect this
+            //and should check for NullReferenceExceptions
+
             if (string.IsNullOrEmpty(contentType))
             {
                 contentType = "text/html";
@@ -101,6 +100,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             // We're forgoing the usual error status codes here because the client
             // ignores anything but 200 and 301
+
             response.StatusCode = (int)OSHttpStatusCode.SuccessOk;
 
             if (responseCode == (int)OSHttpStatusCode.RedirectMovedPermanently)

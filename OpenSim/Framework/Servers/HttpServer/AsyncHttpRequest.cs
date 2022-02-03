@@ -1,7 +1,4 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
  * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
  *
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -31,9 +28,9 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Reflection;
 using log4net;
 using OpenMetaverse;
 
@@ -80,7 +77,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             string[] rHeaders = HttpRequest.Headers.AllKeys;
 
             string requestBody;
-
             using (StreamReader reader = new StreamReader(pRequest.InputStream, Encoding.UTF8))
             {
                 requestBody = reader.ReadToEnd();
@@ -96,15 +92,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                 // HttpRequest.QueryString.AllKeys returns a one-item array, with a null only,
                 // if passed something without an '=' in the query, such as URL/?abc or URL/?abc+def
                 if (queryname != null)
-                {
                     RequestData.Add(queryname, HttpRequest.QueryString[queryname]);
-                }
             }
 
             foreach (string headername in rHeaders)
-            {
                 headervals[headername] = HttpRequest.Headers[headername];
-            }
 
             RequestData.Add("headers", headervals);
             RequestData.Add("querystringkeys", querystringkeys);

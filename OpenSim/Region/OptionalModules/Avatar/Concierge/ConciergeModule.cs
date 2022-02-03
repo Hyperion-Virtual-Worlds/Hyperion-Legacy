@@ -84,13 +84,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
             {
                 if ((m_config = config.Configs["Concierge"]) == null)
                 {
-                    //_log.InfoFormat("[Concierge]: no configuration section [Concierge] in Hyperion.ini: module not configured");
+                    //_log.InfoFormat("[Concierge]: no configuration section [Concierge] in Halcyon.ini: module not configured");
                     return;
                 }
 
                 if (!m_config.GetBoolean("enabled", false))
                 {
-                    //_log.InfoFormat("[Concierge]: module disabled by Hyperion.ini configuration");
+                    //_log.InfoFormat("[Concierge]: module disabled by Halcyon.ini configuration");
                     return;
                 }
             }
@@ -627,7 +627,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
                     (string)requestData["password"] != m_xmlRpcPassword) throw new Exception("wrong password");
 
                 if (String.IsNullOrEmpty(m_welcomes))
-                    throw new Exception("welcome templates are not enabled, ask your Halcyon operator to set the \"welcomes\" option in the [Concierge] section of Hyperion.ini");
+                    throw new Exception("welcome templates are not enabled, ask your Halcyon operator to set the \"welcomes\" option in the [Concierge] section of Halcyon.ini");
 
                 string msg = (string)requestData["welcome"];
                 if (String.IsNullOrEmpty(msg))

@@ -1,9 +1,6 @@
 /*
- * Copyright (c) Virtual World Research Inc. Developers
- * Copyright (c) Conrtibutors, https://hyperionvirtual.com/
- * Copyright (c) HalcyonGrid Developers
- * Copyright (c) InWorldz Halcyon Developers
  * Copyright (c) Contributors, http://opensimulator.org/
+ * See CONTRIBUTORS.TXT for a full list of copyright holders.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -12,7 +9,7 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Hyperion Legacy Project nor the
+ *     * Neither the name of the OpenSimulator Project nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -28,6 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// #define DEBUGGING
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -37,8 +36,8 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Httpserver;
 using log4net;
+using HttpServer;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {
@@ -81,7 +80,6 @@ namespace OpenSim.Framework.Servers.HttpServer
         public static OSHttpRequestPump[] Pumps(OSHttpServer server, OSHttpRequestQueue queue, int poolSize)
         {
             OSHttpRequestPump[] pumps = new OSHttpRequestPump[poolSize];
-
             for (int i = 0; i < pumps.Length; i++)
             {
                 pumps[i] = new OSHttpRequestPump(server, queue, i);
@@ -123,21 +121,16 @@ namespace OpenSim.Framework.Servers.HttpServer
                     // we are either out of handlers or get back a
                     // Pass or Done
                     OSHttpHandlerResult rc = OSHttpHandlerResult.Unprocessed;
-
                     foreach (OSHttpHandler h in handlers)
                     {
                         rc = h.Process(req);
 
                         // Pass: handler did not process the request,
                         // try next handler
-                        if (OSHttpHandlerResult.Pass == rc)
-                        {
-                            continue;
-                        }
+                        if (OSHttpHandlerResult.Pass == rc) continue;
 
                         // Handled: handler has processed the request
-                        if (OSHttpHandlerResult.Done == rc)
-                            break;
+                        if (OSHttpHandlerResult.Done == rc) break;
 
                         // hmm, something went wrong
                         throw new Exception(String.Format("[{0}] got unexpected OSHttpHandlerResult {1}", EngineID, rc));
@@ -178,7 +171,6 @@ namespace OpenSim.Framework.Servers.HttpServer
             Dictionary<OSHttpHandler, int> scoredHandlers = new Dictionary<OSHttpHandler, int>();
 
             _log.DebugFormat("[{0}] MatchHandlers for {1}", EngineID, req);
-
             foreach (OSHttpHandler h in handlers)
             {
                 // initial anchor
@@ -191,12 +183,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                 {
                     // TODO: following code requires code changes to
                     // HttpServer.HttpRequest to become functional
-                    IPEndPoint remote = req.RemoteIPEndPoint;
 
+                    IPEndPoint remote = req.RemoteIPEndPoint;
                     if (null != remote)
                     {
                         Match epm = h.IPEndPointWhitelist.Match(remote.ToString());
-
                         if (!epm.Success)
                         {
                             scoredHandlers.Remove(h);
@@ -208,13 +199,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                 if (null != h.Method)
                 {
                     Match m = h.Method.Match(req.HttpMethod);
-
                     if (!m.Success)
                     {
                         scoredHandlers.Remove(h);
                         continue;
                     }
-
                     scoredHandlers[h]++;
                 }
 
@@ -222,13 +211,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                 if (null != h.Path)
                 {
                     Match m = h.Path.Match(req.RawUrl);
-
                     if (!m.Success)
                     {
                         scoredHandlers.Remove(h);
                         continue;
                     }
-
                     scoredHandlers[h] += m.ToString().Length;
                 }
 
@@ -236,7 +223,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                 if (null != h.Query)
                 {
                     int queriesMatch = MatchOnNameValueCollection(req.QueryString, h.Query);
-
                     if (0 == queriesMatch)
                     {
                         _log.DebugFormat("[{0}] request {1}", EngineID, req);
@@ -245,7 +231,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                         scoredHandlers.Remove(h);
                         continue;
                     }
-
                     scoredHandlers[h] +=  queriesMatch;
                 }
 
@@ -253,7 +238,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                 if (null != h.Headers)
                 {
                     int headersMatch = MatchOnNameValueCollection(req.Headers, h.Headers);
-
                     if (0 == headersMatch)
                     {
                         _log.DebugFormat("[{0}] request {1}", EngineID, req);
@@ -262,17 +246,15 @@ namespace OpenSim.Framework.Servers.HttpServer
                         scoredHandlers.Remove(h);
                         continue;
                     }
-
                     scoredHandlers[h] +=  headersMatch;
                 }
             }
 
             List<OSHttpHandler> matchingHandlers = new List<OSHttpHandler>(scoredHandlers.Keys);
             matchingHandlers.Sort(delegate(OSHttpHandler x, OSHttpHandler y)
-            {
-                return scoredHandlers[x] - scoredHandlers[y];
-            });
-
+                                  {
+                                      return scoredHandlers[x] - scoredHandlers[y];
+                                  });
             LogDumpHandlerList(matchingHandlers);
             return matchingHandlers;
         }
@@ -292,7 +274,6 @@ namespace OpenSim.Framework.Servers.HttpServer
                 // does the content of collection[tag] match
                 // the supplied regex?
                 Match cm = regexs[tag].Match(collection[tag]);
-
                 if (!cm.Success)
                 {
                     return 0;
@@ -310,11 +291,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         private void LogDumpHandlerList(List<OSHttpHandler> l)
         {
             _log.DebugFormat("[{0}] OSHttpHandlerList dump:", EngineID);
-
             foreach (OSHttpHandler h in l)
-            {
                 _log.DebugFormat("    ", h.ToString());
-            }
         }
     }
 }

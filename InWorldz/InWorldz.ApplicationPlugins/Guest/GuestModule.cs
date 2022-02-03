@@ -50,7 +50,7 @@ namespace InWorldz.ApplicationPlugins.GuestModule
     /// [GuestModule]
     ///     Enabled = true
     /// 
-    /// into Hyperion.ini.
+    /// into Halcyon.ini.
     /// </summary>
     public class GuestModule : INonSharedRegionModule
     {

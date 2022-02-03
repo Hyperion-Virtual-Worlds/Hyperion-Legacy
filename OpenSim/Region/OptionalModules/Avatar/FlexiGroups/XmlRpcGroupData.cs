@@ -58,7 +58,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.FlexiGroups
         {
             if (String.IsNullOrWhiteSpace(serviceURL))
             {
-                throw new Exception("Please specify a valid ServiceURL for XmlRpcGroupDataProvider in Hyperion.ini, [Groups], XmlRpcServiceURL");
+                throw new Exception("Please specify a valid ServiceURL for XmlRpcGroupDataProvider in Halcyon.ini, [Groups], XmlRpcServiceURL");
             }
 
             m_serviceURL = serviceURL.Trim();
